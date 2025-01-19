@@ -12,16 +12,16 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Rotation2d;
+//import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.subsystems.Telemetry;
-import frc.robot.subsystems.TestSubsystem;
-import frc.robot.subsystems.elevator.ElevatorSubsystem;
-import frc.robot.subsystems.elevator.elevatorToPosCommand;
+import frc.robot.subsystems.AlgaeSubsystem;
+//import frc.robot.subsystems.elevator.ElevatorSubsystem;
+//import frc.robot.subsystems.elevator.elevatorToPosCommand;
 import frc.robot.subsystems.limelight.LimelightSubsystem;
 import frc.robot.subsystems.swerveDrive.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerveDrive.TunerConstants;
@@ -47,9 +47,9 @@ public class RobotContainer {
 
     //Create Subsystems
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-    public final TestSubsystem testSubsystem = new TestSubsystem();
+    public final AlgaeSubsystem algaeSubsystem = new AlgaeSubsystem();
     public final LimelightSubsystem limelightSubsystem; 
-    public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
+    //public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
 
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
@@ -78,8 +78,11 @@ public class RobotContainer {
         // joystick.b().whileTrue(drivetrain.applyRequest(() ->
         //     point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
         // ));
-        joystick.a().onTrue(new elevatorToPosCommand(ElevatorSubsystem.level4Position, elevatorSubsystem));
-         joystick.b().onTrue(new elevatorToPosCommand(ElevatorSubsystem.level1Position, elevatorSubsystem));
+       // joystick.a().onTrue(new elevatorToPosCommand(ElevatorSubsystem.level4Position, elevatorSubsystem));
+        // joystick.b().onTrue(new elevatorToPosCommand(ElevatorSubsystem.level1Position, elevatorSubsystem));
+         joystick.b().whileTrue(algaeSubsystem.intakeCommand());
+         joystick.a().whileTrue(algaeSubsystem.scoreProcessorCommand());
+         joystick.y().onTrue(algaeSubsystem.holdDriveCommand());
 
         joystick.pov(0).whileTrue(drivetrain.applyRequest(() ->
             forwardStraight.withVelocityX(0.5).withVelocityY(0))

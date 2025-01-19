@@ -1,11 +1,19 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+//import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
+//import edu.wpi.first.wpilibj.motorcontrol.Spark;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
@@ -23,20 +31,83 @@ public class TestSubsystem extends SubsystemBase {
   //private SparkMax sparkmax = new SparkMax(3, MotorType.kBrushless);
   //add new victor spx
   //private WPI_VictorSPX victor = new WPI_VictorSPX(0);
+  
+  // private SparkMax rollerMotor = new SparkMax(1, MotorType.kBrushless);
+  // private SparkMax elbowMotor = new SparkMax(4, MotorType.kBrushless);
+
+  //   private SparkMaxConfig testConfig=new SparkMaxConfig();
+  // private SparkClosedLoopController rollerPIDController=rollerMotor.getClosedLoopController();
+  // private SparkClosedLoopController elbowPIDController=elbowMotor.getClosedLoopController();
+  // public RelativeEncoder rollerEncoder=rollerMotor.getEncoder();
+  // public RelativeEncoder elbowEncoder=elbowMotor.getEncoder();
+
+  // public static final double INTAKE_POSITION =-10;
+  // public static final double DRIVE_HOLD_POSITION =10;
+  // public static final double PROCESSOR_HOLD_POSITION =0;
+
+  // public static final double INTAKE_VOLTAGE =0;
+  // public static final double OUTTAKE_VOLTAGE =0;
+
+  
 
  
-  public TestSubsystem() {
-    // Initialize the subsystem here
-    timer.start();
-  }
+  // public TestSubsystem() {
+  //   // Initialize the subsystem here
+  //   timer.start();
+  //   testConfig.encoder.positionConversionFactor(1)
+  //   .velocityConversionFactor(1);
+  //   testConfig.smartCurrentLimit(1,2);
 
-  @Override
-  public void periodic() {
-    // Put code here to be run every loop
-    if(timer.hasElapsed(1.0)) {
-      System.out.println("Hello World");
-      timer.reset();
-    }
-  }
+  //   testConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+  //   .p(0.001).i(0.0000).d(0.0001);
+    
+  //   rollerMotor.configure(testConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+  //   elbowMotor.configure(testConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+  //   rollerPIDController.setReference(0, SparkMax.ControlType.kPosition); 
+    
+  //   elbowEncoder.setPosition(0);
+  //   elbowPIDController.setReference(0, SparkMax.ControlType.kPosition);
+  // }
+ 
+  
+
+  // @Override
+  // public void periodic() {
+  //   // Put code here to be run every loop
+  //   if(timer.hasElapsed(1.0)) {
+  //     System.out.println("Hello World");
+  //     timer.reset();
+  //   }
+  // }
+  // public Command setSpeedCommand(double targetSpeed){
+  //   return runOnce(()->{rollerPIDController.setReference(targetSpeed, ControlType.kVoltage);});
+  // }
+  // public Command setPositionCommand(double targetPos){
+  //   return runOnce(()->{rollerPIDController.setReference(targetPos, ControlType.kPosition);});
+  // }
+  // public Command intakeCommand(){
+  //   return runOnce(()->{
+  //     elbowPIDController.setReference(INTAKE_POSITION, SparkMax.ControlType.kPosition);
+  //     rollerPIDController.setReference(INTAKE_VOLTAGE, ControlType.kVoltage);
+  //   });
+  // }
+  // public Command holdDriveCommand(){
+  //   return runOnce(()->{
+  //     elbowPIDController.setReference(DRIVE_HOLD_POSITION, SparkMax.ControlType.kPosition);
+  //     rollerPIDController.setReference(INTAKE_VOLTAGE/5, ControlType.kVoltage);
+  //   });
+  // }
+  // public Command holdProcessorCommand(){
+  //   return runOnce(()->{
+  //     elbowPIDController.setReference(PROCESSOR_HOLD_POSITION, SparkMax.ControlType.kPosition);
+  //     rollerPIDController.setReference(INTAKE_VOLTAGE/5, ControlType.kVoltage);
+  //   });
+  // }
+  // public Command scoreProcessorCommand(){
+  //   return runOnce(()->{
+  //     elbowPIDController.setReference(PROCESSOR_HOLD_POSITION, SparkMax.ControlType.kPosition);
+  //     rollerPIDController.setReference(OUTTAKE_VOLTAGE, ControlType.kVoltage);
+  //   });
+  // }
 
 }

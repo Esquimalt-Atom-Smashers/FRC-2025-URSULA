@@ -26,7 +26,7 @@ public class ElevatorHomingCommand extends Command {
     public void initialize() {
       // TODO Auto-generated method stub
       elevatorSubsystem.elevatorMotor.setVoltage(5);
-      //elevatorSubsystem.elevatorMotor.configure(homingConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+      elevatorSubsystem.elevatorMotor.configure(homingConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
       finished=false;
       timer.reset();
       timer.start();
@@ -36,8 +36,6 @@ public class ElevatorHomingCommand extends Command {
       //if elevatorMotor.getOutputCurrent()
       if (timer.hasElapsed(.5)){
         
-        //elevatorSubsystem.elevatorEncoder.setPosition(0);
-        //elevatorSubsystem.elevatorMotor.configure(elevatorSubsystem.elevatorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
         if (elevatorSubsystem.elevatorEncoder.getVelocity()<300||timer.hasElapsed(5)){
           finished = true;
           elevatorSubsystem.elevatorMotor.setVoltage(0);
@@ -51,6 +49,8 @@ public class ElevatorHomingCommand extends Command {
         elevatorSubsystem.elevatorEncoder.setPosition(0);
         elevatorSubsystem.elevatorClosedLoopController.setReference(0, SparkMax.ControlType.kPosition);
       }
+      elevatorSubsystem.elevatorMotor.configure(elevatorSubsystem.elevatorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+
       
         
     }

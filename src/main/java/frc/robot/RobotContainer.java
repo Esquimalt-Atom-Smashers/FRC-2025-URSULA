@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 // import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 // import frc.robot.subsystems.Telemetry;
 import frc.robot.subsystems.TestSubsystem;
+import frc.robot.subsystems.elevator.ElevatorHomingCommand;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.elevator.elevatorToPosCommand;
 // import frc.robot.subsystems.limelight.LimelightSubsystem;
@@ -80,6 +81,7 @@ public class RobotContainer {
         // ));
         joystick.a().onTrue(new elevatorToPosCommand(ElevatorSubsystem.level4Position, elevatorSubsystem));
          joystick.b().onTrue(new elevatorToPosCommand(ElevatorSubsystem.level1Position, elevatorSubsystem));
+         joystick.y().onTrue(new ElevatorHomingCommand(elevatorSubsystem));
 
         // joystick.pov(0).whileTrue(drivetrain.applyRequest(() ->
         //     forwardStraight.withVelocityX(0.5).withVelocityY(0))

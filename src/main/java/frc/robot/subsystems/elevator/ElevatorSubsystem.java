@@ -49,9 +49,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     timer.start();
     elevatorConfig.encoder.positionConversionFactor(1)
     .velocityConversionFactor(1);
+    elevatorConfig.smartCurrentLimit(1,5,50);
 
     elevatorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-    .p(0.1).i(0.0001).d(0.01);
+    .p(0.01).i(0.000001).d(0.001);
     elevatorMotor.configure(elevatorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
     elevatorPIDController.setReference(0, SparkMax.ControlType.kPosition);    
   }
@@ -62,7 +63,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   public void periodic() {
     // Put code here to be run every loop
     if(timer.hasElapsed(2.0)) {
-      System.out.println("Elevator Running");
+      System.out.println("Elevator Running at position"+elevatorEncoder.getPosition());
       timer.reset();
     }
   }

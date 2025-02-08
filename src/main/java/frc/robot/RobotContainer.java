@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.subsystems.Telemetry;
 import frc.robot.subsystems.TestSubsystem;
+import frc.robot.subsystems.algaeGround.AlgaeGroundSubsystem;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.elevator.elevatorToPosCommand;
 import frc.robot.subsystems.limelight.LimelightSubsystem;
@@ -50,6 +51,7 @@ public class RobotContainer {
     public final TestSubsystem testSubsystem = new TestSubsystem();
     public final LimelightSubsystem limelightSubsystem; 
     public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
+    public final AlgaeGroundSubsystem algaeGroundSubsystem = new AlgaeGroundSubsystem();
 
     /* Path follower */
     private final SendableChooser<Command> autoChooser;

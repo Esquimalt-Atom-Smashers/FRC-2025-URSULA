@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.subsystems.Telemetry;
 import frc.robot.subsystems.TestSubsystem;
 import frc.robot.subsystems.algaeGround.AlgaeGroundSubsystem;
+import frc.robot.subsystems.algaeGround.AlgaeToPosCommand;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.elevator.elevatorToPosCommand;
 import frc.robot.subsystems.limelight.LimelightSubsystem;
@@ -75,7 +76,8 @@ public class RobotContainer {
                     .withRotationalRate(MathUtil.applyDeadband(-joystick.getRightX(),XBOX_DEADBAND) * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
-
+        joystick.x().onTrue(new AlgaeToPosCommand(AlgaeGroundSubsystem.drivePosition, algaeGroundSubsystem));
+        joystick.y().onTrue(new AlgaeToPosCommand(AlgaeGroundSubsystem.intakePosition, algaeGroundSubsystem));
         // joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
         // joystick.b().whileTrue(drivetrain.applyRequest(() ->
         //     point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
@@ -83,22 +85,22 @@ public class RobotContainer {
         joystick.a().onTrue(new elevatorToPosCommand(ElevatorSubsystem.level4Position, elevatorSubsystem));
          joystick.b().onTrue(new elevatorToPosCommand(ElevatorSubsystem.level1Position, elevatorSubsystem));
 
-        joystick.pov(0).whileTrue(drivetrain.applyRequest(() ->
-            forwardStraight.withVelocityX(0.5).withVelocityY(0))
-        );
-        joystick.pov(180).whileTrue(drivetrain.applyRequest(() ->
-            forwardStraight.withVelocityX(-0.5).withVelocityY(0))
-        );
+        // joystick.pov(0).whileTrue(drivetrain.applyRequest(() ->
+        //     forwardStraight.withVelocityX(0.5).withVelocityY(0))
+        // );
+        // joystick.pov(180).whileTrue(drivetrain.applyRequest(() ->
+        //     forwardStraight.withVelocityX(-0.5).withVelocityY(0))
+        // );
 
-        // Run SysId routines when holding back/start and X/Y.
-        // Note that each routine should be run exactly once in a single log.
-        joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        joystick.back().and(joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-        joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-        joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+        // // Run SysId routines when holding back/start and X/Y.
+        // // Note that each routine should be run exactly once in a single log.
+        // joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+        // joystick.back().and(joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+        // joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+        // joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
-        // reset the field-centric heading on left bumper press
-        joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+        // // reset the field-centric heading on left bumper press
+        // joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }

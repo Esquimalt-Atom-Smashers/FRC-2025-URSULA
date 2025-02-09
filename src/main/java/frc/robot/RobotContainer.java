@@ -66,10 +66,10 @@ public class RobotContainer {
         DigitalInput isCompetitionRobot = new DigitalInput(0);
 
         if (isCompetitionRobot.get()) {
-            elevatorSubsystem.isCompetitionRobot(true);
+            elevatorSubsystem.isCompetitionRobot(false);
         }
         else {
-            elevatorSubsystem.isCompetitionRobot(false);
+            elevatorSubsystem.isCompetitionRobot(true);
         }
 
 

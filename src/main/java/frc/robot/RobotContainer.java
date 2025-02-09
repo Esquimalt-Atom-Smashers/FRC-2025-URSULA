@@ -11,6 +11,7 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 // import edu.wpi.first.math.MathUtil;
 // import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -60,6 +61,18 @@ public class RobotContainer {
         // SmartDashboard.putData("Auto Mode", autoChooser);
         // //limelightSubsystem = new LimelightSubsystem(drivetrain, false);
 
+        // Determining if the current robot is the competition robot or nah, and telling the
+        // relevant subsystems.
+        DigitalInput isCompetitionRobot = new DigitalInput(0);
+
+        if (isCompetitionRobot.get()) {
+            elevatorSubsystem.isCompetitionRobot(true);
+        }
+        else {
+            elevatorSubsystem.isCompetitionRobot(false);
+        }
+
+
         configureBindings();
     }
 
@@ -80,8 +93,8 @@ public class RobotContainer {
         //     point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
         // ));
         joystick.a().onTrue(new elevatorToPosCommand(ElevatorSubsystem.level4Position, elevatorSubsystem));
-         joystick.b().onTrue(new elevatorToPosCommand(ElevatorSubsystem.level1Position, elevatorSubsystem));
-         joystick.y().onTrue(new ElevatorHomingCommand(elevatorSubsystem));
+        joystick.b().onTrue(new elevatorToPosCommand(ElevatorSubsystem.level1Position, elevatorSubsystem));
+        joystick.y().onTrue(new ElevatorHomingCommand(elevatorSubsystem));
 
         // joystick.pov(0).whileTrue(drivetrain.applyRequest(() ->
         //     forwardStraight.withVelocityX(0.5).withVelocityY(0))

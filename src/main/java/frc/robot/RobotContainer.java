@@ -47,9 +47,9 @@ public class RobotContainer {
 
     //Create Subsystems
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-    public final TestSubsystem testSubsystem = new TestSubsystem();
-    public final LimelightSubsystem limelightSubsystem; 
-    public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
+    // public final TestSubsystem testSubsystem = new TestSubsystem();
+    // public final LimelightSubsystem limelightSubsystem; 
+    // public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
 
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
@@ -57,7 +57,7 @@ public class RobotContainer {
     public RobotContainer() {
         autoChooser = AutoBuilder.buildAutoChooser("Tests");
         SmartDashboard.putData("Auto Mode", autoChooser);
-        limelightSubsystem = new LimelightSubsystem(drivetrain, false);
+        //limelightSubsystem = new LimelightSubsystem(drivetrain, false);
 
         configureBindings();
     }
@@ -77,9 +77,9 @@ public class RobotContainer {
         // joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
         // joystick.b().whileTrue(drivetrain.applyRequest(() ->
         //     point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
-        // ));
-        joystick.a().onTrue(new elevatorToPosCommand(ElevatorSubsystem.level4Position, elevatorSubsystem));
-         joystick.b().onTrue(new elevatorToPosCommand(ElevatorSubsystem.level1Position, elevatorSubsystem));
+        // // ));
+        // joystick.a().onTrue(new elevatorToPosCommand(ElevatorSubsystem.level4Position, elevatorSubsystem));
+        //  joystick.b().onTrue(new elevatorToPosCommand(ElevatorSubsystem.level1Position, elevatorSubsystem));
 
         joystick.pov(0).whileTrue(drivetrain.applyRequest(() ->
             forwardStraight.withVelocityX(0.5).withVelocityY(0))

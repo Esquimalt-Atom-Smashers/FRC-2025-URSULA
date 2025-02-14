@@ -22,6 +22,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 // import frc.robot.subsystems.Telemetry;
 import frc.robot.subsystems.TestSubsystem;
 import frc.robot.subsystems.elevator.ElevatorHomingCommand;
+import frc.robot.subsystems.algaeGround.AlgaeGroundSubsystem;
+import frc.robot.subsystems.algaeGround.AlgaeToPosCommand;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.elevator.elevatorToPosCommand;
 // import frc.robot.subsystems.limelight.LimelightSubsystem;
@@ -52,6 +54,7 @@ public class RobotContainer {
     // public final TestSubsystem testSubsystem = new TestSubsystem();
     public final LimelightSubsystem limelightSubsystem= new LimelightSubsystem(drivetrain, false); 
     public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
+    public final AlgaeGroundSubsystem algaeGroundSubsystem = new AlgaeGroundSubsystem();
 
     /* Path follower */
     //private final SendableChooser<Command> autoChooser;
@@ -87,7 +90,8 @@ public class RobotContainer {
         //             .withRotationalRate(MathUtil.applyDeadband(-joystick.getRightX(),XBOX_DEADBAND) * MaxAngularRate) // Drive counterclockwise with negative X (left)
         //     )
         // );
-
+        joystick.x().onTrue(new AlgaeToPosCommand(AlgaeGroundSubsystem.drivePosition, algaeGroundSubsystem));
+        joystick.y().onTrue(new AlgaeToPosCommand(AlgaeGroundSubsystem.intakePosition, algaeGroundSubsystem));
         // joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
         // joystick.b().whileTrue(drivetrain.applyRequest(() ->
         //     point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))

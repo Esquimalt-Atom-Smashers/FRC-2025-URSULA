@@ -48,8 +48,8 @@ public class RobotContainer {
     //Create Subsystems
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     // public final TestSubsystem testSubsystem = new TestSubsystem();
-    // public final LimelightSubsystem limelightSubsystem; 
-    // public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
+    public final LimelightSubsystem limelightSubsystem= new LimelightSubsystem(drivetrain, false); 
+    public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
 
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
@@ -78,8 +78,8 @@ public class RobotContainer {
         // joystick.b().whileTrue(drivetrain.applyRequest(() ->
         //     point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
         // // ));
-        // joystick.a().onTrue(new elevatorToPosCommand(ElevatorSubsystem.level4Position, elevatorSubsystem));
-        //  joystick.b().onTrue(new elevatorToPosCommand(ElevatorSubsystem.level1Position, elevatorSubsystem));
+        joystick.a().onTrue(new elevatorToPosCommand(ElevatorSubsystem.level4Position, elevatorSubsystem));
+        joystick.b().onTrue(new elevatorToPosCommand(ElevatorSubsystem.level1Position, elevatorSubsystem));
 
         joystick.pov(0).whileTrue(drivetrain.applyRequest(() ->
             forwardStraight.withVelocityX(0.5).withVelocityY(0))

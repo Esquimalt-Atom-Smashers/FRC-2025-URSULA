@@ -19,13 +19,13 @@ public class ElevatorSubsystem extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
   public static final double lowPosition=0;
-  public static final double processorPosition=-10;
-  public static final double level1Position=-20;
-  public static final double level2Position=-30;
-  public static final double level3Position=-40;
-  public static final double level4Position=-50;
-  public static final double netPosition=-60;
-  public static final double coralStationPosition=-70;
+  public static final double processorPosition=10;
+  public static final double level1Position=20;
+  public static final double level2Position=30;
+  public static final double level3Position=40;
+  public static final double level4Position=50;
+  public static final double netPosition=60;
+  public static final double coralStationPosition=25;
 
 
 
@@ -35,7 +35,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   //add a new spark controller
   //private Spark spark = new Spark(0);
   //add anew sparkmax brushless
-  private SparkMax elevatorMotor = new SparkMax(3, MotorType.kBrushless);
+  private SparkMax elevatorMotor = new SparkMax(1, MotorType.kBrushless);
   //add new victor spx
   //private WPI_VictorSPX victor = new WPI_VictorSPX(0);
   private SparkMaxConfig elevatorConfig=new SparkMaxConfig();

@@ -32,7 +32,7 @@ public class AlgaeGroundSubsystem extends SubsystemBase {
   //add a timer object
   private Timer timer = new Timer();
  //add anew sparkmax brushless
-  private SparkMax algaeMotor = new SparkMax(8, MotorType.kBrushless);
+  private SparkMax algaeMotor = new SparkMax(2, MotorType.kBrushless);
   //add new victor spx
   //private WPI_VictorSPX victor = new WPI_VictorSPX(0);
   private SparkMaxConfig algaeConfig=new SparkMaxConfig();

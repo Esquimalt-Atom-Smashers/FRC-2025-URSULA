@@ -23,8 +23,8 @@ public class AlgaeGroundSubsystem extends SubsystemBase {
   public static final double processorPosition=-10;
   public static final double intakePosition=-60;
   public static final double GEARBOX_RATIO = 100;
-  public static final double GEARCHAIN_RATIO = 1;//TODO
-  public static final double POT_OFFSET = 0;//TODO
+  public static final double GEARCHAIN_RATIO = 42/18;
+  public static final double POT_OFFSET = 120;//TODO
 
 
 
@@ -44,7 +44,7 @@ public class AlgaeGroundSubsystem extends SubsystemBase {
   
     // The full range of motion (in meaningful external units) is 0-180 (this could be degrees, for instance)
     // The "starting point" of the motion, i.e. where the mechanism is located when the potentiometer reads 0v, is 30.
-    AnalogPotentiometer pot = new AnalogPotentiometer(analogInput, 300.0, 0.0);
+    AnalogPotentiometer pot = new AnalogPotentiometer(analogInput, -300.0, POT_OFFSET);
 
   public AlgaeGroundSubsystem(){
     timer.start();
@@ -52,12 +52,12 @@ public class AlgaeGroundSubsystem extends SubsystemBase {
     analogInput.setAverageBits(2);
     algaeConfig.encoder.positionConversionFactor(360/(GEARBOX_RATIO*GEARCHAIN_RATIO))
     .velocityConversionFactor(360/(GEARBOX_RATIO*GEARCHAIN_RATIO));
+    algaeConfig.smartCurrentLimit(1,3,200);
     algaeMotor.getEncoder().setPosition(pot.get());
     algaeConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-    .p(0.1).i(0.000).d(0.01);
+    .p(0.1).i(0.000).d(0.01).maxOutput(0.2).minOutput(-0.2);
     algaeMotor.configure(algaeConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
     algaePIDController.setReference(drivePosition, SparkMax.ControlType.kPosition);  
-    
 
   }
 

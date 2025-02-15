@@ -39,7 +39,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   //add a new spark controller
   //private Spark spark = new Spark(0);
   //add anew sparkmax brushless
-  private SparkMax elevatorMotor = new SparkMax(1, MotorType.kBrushless);
+  protected SparkMax elevatorMotor = new SparkMax(1, MotorType.kBrushless);
   //add new victor spx
   //private WPI_VictorSPX victor = new WPI_VictorSPX(0);
   protected SparkMaxConfig elevatorConfig=new SparkMaxConfig();

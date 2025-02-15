@@ -7,12 +7,12 @@ package frc.robot.subsystems.elevator;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
-public class elevatorToPosCommand extends Command {
+public class ElevatorToPosCommand extends Command {
   double positionRevolutions =0;  
   private ElevatorSubsystem elevatorSubsystem; 
   private boolean atPosition = false;
 
-  public elevatorToPosCommand(double positionRevolutions,ElevatorSubsystem elevatorSubsystem) {
+  public ElevatorToPosCommand(double positionRevolutions,ElevatorSubsystem elevatorSubsystem) {
     this.positionRevolutions = positionRevolutions;
     this.elevatorSubsystem = elevatorSubsystem;
     this.addRequirements(elevatorSubsystem);

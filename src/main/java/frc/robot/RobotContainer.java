@@ -6,10 +6,14 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.jar.Attributes.Name;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.fasterxml.jackson.databind.util.Named;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.math.MathUtil;
@@ -60,9 +64,11 @@ public class RobotContainer {
     private final SendableChooser<Command> autoChooser;
 
     public RobotContainer() {
+        //register the named commands for auto
+        registerCommands();
         autoChooser = AutoBuilder.buildAutoChooser("Tests");
         SmartDashboard.putData("Auto Mode", autoChooser);
-        limelightSubsystem = new LimelightSubsystem(drivetrain, false);
+        limelightSubsystem = new LimelightSubsystem(drivetrain, true);
 
         configureBindings();
     }
@@ -110,5 +116,16 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         /* Run the path selected from the auto chooser */
         return autoChooser.getSelected();
+    }
+    private void registerCommands(){
+        //register the commands here
+        NamedCommands.registerCommand("ElevatorHomingCommand", new ElevatorHomingCommand(elevatorSubsystem));
+        NamedCommands.registerCommand("AlgaeToDrivePos", new AlgaeToPosCommand(AlgaeGroundSubsystem.drivePosition, algaeGroundSubsystem));
+        NamedCommands.registerCommand("AlgaeToIntakePos", new AlgaeToPosCommand(AlgaeGroundSubsystem.intakePosition, algaeGroundSubsystem));
+        NamedCommands.registerCommand("ElevatorToLVL1", new ElevatorToPosCommand(ElevatorSubsystem.level1Position, elevatorSubsystem));
+        NamedCommands.registerCommand("ElevatorToLVL2", new ElevatorToPosCommand(ElevatorSubsystem.level2Position, elevatorSubsystem));
+        NamedCommands.registerCommand("ElevatorToLVL3", new ElevatorToPosCommand(ElevatorSubsystem.level3Position, elevatorSubsystem));
+        NamedCommands.registerCommand("ElevatorToLVL4", new ElevatorToPosCommand(ElevatorSubsystem.level4Position, elevatorSubsystem));
+
     }
 }

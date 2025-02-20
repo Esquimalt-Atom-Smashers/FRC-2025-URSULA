@@ -24,7 +24,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 // import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 // import frc.robot.subsystems.Telemetry;
-import frc.robot.subsystems.TestSubsystem;
 import frc.robot.subsystems.elevator.ElevatorHomingCommand;
 import frc.robot.subsystems.algaeGround.AlgaeGroundSubsystem;
 import frc.robot.subsystems.algaeGround.AlgaeToPosCommand;
@@ -55,7 +54,6 @@ public class RobotContainer {
 
     //Create Subsystems
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-    // public final TestSubsystem testSubsystem = new TestSubsystem();
     public LimelightSubsystem limelightSubsystem; 
     public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
     public final AlgaeGroundSubsystem algaeGroundSubsystem = new AlgaeGroundSubsystem();

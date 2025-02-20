@@ -23,7 +23,7 @@ import frc.robot.subsystems.TestSubsystem;
 import frc.robot.subsystems.algaeGround.AlgaeGroundSubsystem;
 import frc.robot.subsystems.algaeGround.AlgaeToPosCommand;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
-import frc.robot.subsystems.elevator.elevatorToPosCommand;
+import frc.robot.subsystems.elevator.ElevatorToPosCommand;
 import frc.robot.subsystems.limelight.LimelightSubsystem;
 import frc.robot.subsystems.swerveDrive.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerveDrive.TunerConstants;
@@ -82,8 +82,8 @@ public class RobotContainer {
         // joystick.b().whileTrue(drivetrain.applyRequest(() ->
         //     point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
         // ));
-        joystick.a().onTrue(new elevatorToPosCommand(ElevatorSubsystem.level4Position, elevatorSubsystem));
-         joystick.b().onTrue(new elevatorToPosCommand(ElevatorSubsystem.level1Position, elevatorSubsystem));
+        joystick.a().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.level4Position, elevatorSubsystem));
+         joystick.b().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.level1Position, elevatorSubsystem));
 
         // joystick.pov(0).whileTrue(drivetrain.applyRequest(() ->
         //     forwardStraight.withVelocityX(0.5).withVelocityY(0))

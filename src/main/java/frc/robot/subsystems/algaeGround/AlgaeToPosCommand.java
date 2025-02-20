@@ -22,14 +22,14 @@ public class AlgaeToPosCommand extends Command {
   @Override
   public void initialize() {
     System.out.println("StartingAlgaeMove");
-    algaeGroundSubsystem.setTargetPosition(positionDegrees);
+    algaeGroundSubsystem.setTargetAngle(positionDegrees);
 
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (Math.abs(algaeGroundSubsystem.algaeEncoder.getPosition()-positionDegrees)<1){
+    if (Math.abs(algaeGroundSubsystem.algaeArmEncoder.getPosition()-positionDegrees)<1){
       atPosition=true;
 
     }

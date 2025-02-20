@@ -83,8 +83,8 @@ public class RobotContainer {
                     .withRotationalRate(MathUtil.applyDeadband(-joystick.getRightX(),XBOX_DEADBAND) * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
-        joystick.x().onTrue(new AlgaeToPosCommand(AlgaeGroundSubsystem.drivePosition, algaeGroundSubsystem));
-        joystick.y().onTrue(new AlgaeToPosCommand(AlgaeGroundSubsystem.intakePosition, algaeGroundSubsystem));
+        joystick.x().onTrue(new AlgaeToPosCommand(AlgaeGroundSubsystem.DRIVE_POSITION, algaeGroundSubsystem));
+        joystick.y().onTrue(new AlgaeToPosCommand(AlgaeGroundSubsystem.INTAKE_POSITION, algaeGroundSubsystem));
         // joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
         // joystick.b().whileTrue(drivetrain.applyRequest(() ->
         //     point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
@@ -119,8 +119,8 @@ public class RobotContainer {
     private void registerCommands(){
         //register the commands here
         NamedCommands.registerCommand("ElevatorHomingCommand", new ElevatorHomingCommand(elevatorSubsystem));
-        NamedCommands.registerCommand("AlgaeToDrivePos", new AlgaeToPosCommand(AlgaeGroundSubsystem.drivePosition, algaeGroundSubsystem));
-        NamedCommands.registerCommand("AlgaeToIntakePos", new AlgaeToPosCommand(AlgaeGroundSubsystem.intakePosition, algaeGroundSubsystem));
+        NamedCommands.registerCommand("AlgaeToDrivePos", new AlgaeToPosCommand(AlgaeGroundSubsystem.DRIVE_POSITION, algaeGroundSubsystem));
+        NamedCommands.registerCommand("AlgaeToIntakePos", new AlgaeToPosCommand(AlgaeGroundSubsystem.INTAKE_POSITION, algaeGroundSubsystem));
         NamedCommands.registerCommand("ElevatorToLVL1", new ElevatorToPosCommand(ElevatorSubsystem.level1Position, elevatorSubsystem));
         NamedCommands.registerCommand("ElevatorToLVL2", new ElevatorToPosCommand(ElevatorSubsystem.level2Position, elevatorSubsystem));
         NamedCommands.registerCommand("ElevatorToLVL3", new ElevatorToPosCommand(ElevatorSubsystem.level3Position, elevatorSubsystem));

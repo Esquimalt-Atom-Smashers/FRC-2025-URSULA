@@ -4,6 +4,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.ctre.phoenix6.Utils;
 
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.Nat;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -107,7 +111,17 @@ public class LimelightSubsystem extends SubsystemBase{
       LimelightHelpers.SetRobotOrientation("limelight", headingDeg, 0, 0, 0, 0, 0);
       var llMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
       if (llMeasurement != null && llMeasurement.tagCount > 0 && omegaRps < 2.0) {
+        Matrix<N3, N1> visionMeasurementStdDevs = new Matrix<>(
+            Nat.N3(), Nat.N1(), new double[] {llMeasurement.avgTagDist, llMeasurement.avgTagDist,1});
+        drivetrain.setVisionMeasurementStdDevs(visionMeasurementStdDevs);
+        //drivetrain.setStateStdDevs(odometryMeasurementStdDevs); //can be added later to change odometry trust
         drivetrain.addVisionMeasurement(llMeasurement.pose, Utils.fpgaToCurrentTime(llMeasurement.timestampSeconds));
+        if(printTimer.hasElapsed(.5)){
+            printTimer.reset();
+            System.out.println("Limelight updatedPose");
+    
+        }
+      
       }
     } else if(printTimer.hasElapsed(1)){
         printTimer.reset();

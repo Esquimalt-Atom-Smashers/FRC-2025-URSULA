@@ -15,6 +15,7 @@ public class ElevatorToPosCommand extends Command {
   public ElevatorToPosCommand(double positionRevolutions,ElevatorSubsystem elevatorSubsystem) {
     this.positionRevolutions = positionRevolutions;
     this.elevatorSubsystem = elevatorSubsystem;
+    this.addRequirements(elevatorSubsystem);
   }
   
 
@@ -23,13 +24,14 @@ public class ElevatorToPosCommand extends Command {
   public void initialize() {
     System.out.println("StartingElevatorMove");
     elevatorSubsystem.setTargetPosition(positionRevolutions);
+    atPosition = false;
 
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (Math.abs(elevatorSubsystem.elevatorEncoder.getPosition()-positionRevolutions)<1){
+    if (Math.abs(elevatorSubsystem.elevatorEncoder.getPosition()-positionRevolutions)<1.0){
       atPosition=true;
 
     }

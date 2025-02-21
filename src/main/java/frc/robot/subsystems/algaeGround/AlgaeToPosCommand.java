@@ -15,6 +15,7 @@ public class AlgaeToPosCommand extends Command {
   public AlgaeToPosCommand(double positionDegrees,AlgaeGroundSubsystem algaeSubsystem) {
     this.positionDegrees = positionDegrees;
     this.algaeGroundSubsystem= algaeSubsystem;
+    this.addRequirements(algaeGroundSubsystem);
   }
   
 
@@ -22,7 +23,8 @@ public class AlgaeToPosCommand extends Command {
   @Override
   public void initialize() {
     System.out.println("StartingAlgaeMove");
-    algaeGroundSubsystem.setTargetAngle(positionDegrees);
+    algaeGroundSubsystem.setArmAngle(positionDegrees);
+    atPosition = false;
 
   }
 

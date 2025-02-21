@@ -83,16 +83,11 @@ public class RobotContainer {
                     .withRotationalRate(MathUtil.applyDeadband(-joystick.getRightX(),XBOX_DEADBAND) * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
-        joystick.x().onTrue(new AlgaeToPosCommand(AlgaeGroundSubsystem.DRIVE_POSITION, algaeGroundSubsystem));
-        joystick.y().onTrue(new AlgaeToPosCommand(AlgaeGroundSubsystem.INTAKE_POSITION, algaeGroundSubsystem));
         // joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
         // joystick.b().whileTrue(drivetrain.applyRequest(() ->
         //     point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
         // // ));
-        joystick.a().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.level4Position, elevatorSubsystem));
-        joystick.b().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.level1Position, elevatorSubsystem));
-
-        // joystick.pov(0).whileTrue(drivetrain.applyRequest(() ->
+         // joystick.pov(0).whileTrue(drivetrain.applyRequest(() ->
         //     forwardStraight.withVelocityX(0.5).withVelocityY(0))
         // );
         // joystick.pov(180).whileTrue(drivetrain.applyRequest(() ->
@@ -108,6 +103,22 @@ public class RobotContainer {
 
         // reset the field-centric heading on left bumper press
         //joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+
+        // Algae Ground Testing Controls
+        joystick.rightBumper().onFalse(algaeGroundSubsystem.stopIntakeSequenceCommand())
+            .onTrue(algaeGroundSubsystem.intakeSequenceCommand());
+        joystick.a().onTrue(algaeGroundSubsystem.intakeUntilStalledCommand())
+            .onFalse(algaeGroundSubsystem.holdCommand());
+        joystick.b().onTrue(algaeGroundSubsystem.outtakeCommand())
+            .onFalse(algaeGroundSubsystem.holdCommand());
+        
+
+
+        //Elevator Testing Controls
+        // joystick.a().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.level4Position, elevatorSubsystem));
+        // joystick.b().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.level1Position, elevatorSubsystem));
+
+       
 
         //drivetrain.registerTelemetry(logger::telemeterize);
     }

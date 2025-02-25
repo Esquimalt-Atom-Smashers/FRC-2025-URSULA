@@ -22,11 +22,11 @@ public class ElevatorSubsystem extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
   public static final double lowPosition=0;
-  public static final double processorPosition=10;
+  //public static final double processorPosition=10;
   public static final double level1Position=20;
-  public static final double level2Position=30;
-  public static final double level3Position=40;
-  public static final double level4Position=50;
+  public static final double level2Position=13;
+  public static final double level3Position=level2Position+16;
+  public static final double level4Position=53.5;
   public static final double netPosition=60;
   public static final double coralStationPosition=25;
 
@@ -57,7 +57,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     elevatorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
     .p(0.1).i(0.000001).d(0.0000)
-    .outputRange(-.4, .6, ClosedLoopSlot.kSlot0);
+    .outputRange(-.2, .6, ClosedLoopSlot.kSlot0);
     // Set PID values for velocity control in slot 1
         // .p(0.0001, ClosedLoopSlot.kSlot1)
         // .i(0, ClosedLoopSlot.kSlot1)

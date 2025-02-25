@@ -107,16 +107,18 @@ public class RobotContainer {
         // Algae Ground Testing Controls
         joystick.rightBumper().onFalse(algaeGroundSubsystem.stopIntakeSequenceCommand())
             .onTrue(algaeGroundSubsystem.intakeSequenceCommand());
-        joystick.a().onTrue(algaeGroundSubsystem.intakeUntilStalledCommand())
-            .onFalse(algaeGroundSubsystem.holdCommand());
-        joystick.b().onTrue(algaeGroundSubsystem.outtakeCommand())
+        //joystick.a().onTrue(algaeGroundSubsystem.intakeUntilStalledCommand())
+            //.onFalse(algaeGroundSubsystem.holdCommand());
+        joystick.leftBumper().onTrue(algaeGroundSubsystem.outtakeCommand())
             .onFalse(algaeGroundSubsystem.holdCommand());
         
 
 
         //Elevator Testing Controls
-        // joystick.a().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.level4Position, elevatorSubsystem));
-        // joystick.b().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.level1Position, elevatorSubsystem));
+         joystick.a().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.lowPosition, elevatorSubsystem));
+         joystick.b().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.level2Position, elevatorSubsystem));
+         joystick.x().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.level3Position, elevatorSubsystem));
+         joystick.y().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.level4Position, elevatorSubsystem));
 
        
 

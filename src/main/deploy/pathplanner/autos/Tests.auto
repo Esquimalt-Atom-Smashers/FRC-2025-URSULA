@@ -7,7 +7,103 @@
         {
           "type": "path",
           "data": {
-            "pathName": "SimplePath"
+            "pathName": "RightStartToReef"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RightReefToPlayer"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RightPlayerToReef1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ElevatorToLV4"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RightScoreReef1"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ElevatorToLV1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RightReefToPlayer"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RightPlayerToReef2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ElevatorToLV4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RightScoreReef2"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ElevatorToLV1"
           }
         }
       ]

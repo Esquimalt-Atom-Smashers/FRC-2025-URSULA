@@ -23,7 +23,7 @@ public class AlgaeGroundSubsystem extends SubsystemBase {
   // here. Call these from Commands.
   //degrees
   public static final double DRIVE_POSITION=15;
-  public static final double PROCESSOR_POSIITON=-20;
+  public static final double PROCESSOR_POSIITON=-40;
   public static final double INTAKE_POSITION=-94;
   public static final double GEARBOX_RATIO = 100;
   public static final double GEARCHAIN_RATIO = 42/18;

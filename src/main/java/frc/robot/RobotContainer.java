@@ -111,6 +111,8 @@ public class RobotContainer {
             //.onFalse(algaeGroundSubsystem.holdCommand());
         joystick.leftBumper().onTrue(algaeGroundSubsystem.outtakeCommand())
             .onFalse(algaeGroundSubsystem.holdCommand());
+        joystick.pov(180).onTrue(new AlgaeToPosCommand(algaeGroundSubsystem.PROCESSOR_POSIITON, algaeGroundSubsystem))
+            .onFalse(new AlgaeToPosCommand(algaeGroundSubsystem.DRIVE_POSITION, algaeGroundSubsystem));
         
 
 

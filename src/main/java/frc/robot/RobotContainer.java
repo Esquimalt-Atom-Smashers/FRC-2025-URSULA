@@ -16,27 +16,39 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 // import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 // import frc.robot.subsystems.Telemetry;
 import frc.robot.subsystems.elevator.ElevatorHomingCommand;
 import frc.robot.subsystems.algaeGround.AlgaeGroundSubsystem;
 import frc.robot.subsystems.algaeGround.AlgaeToPosCommand;
+import frc.robot.subsystems.algaeremover.AlgaeRemoverSubsystem;
+import frc.robot.subsystems.algaeremover.MoveAlgaeWristCommand;
+import frc.robot.subsystems.algaeremover.SpinAlgaeSpinnyThing;
+import frc.robot.subsystems.coraldoor.CoralDoorSubsystem;
+import frc.robot.subsystems.coraldoor.CoralDoorToPositionCommand;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.elevator.ElevatorToPosCommand;
+import frc.robot.subsystems.hangingmechanism.HangingSubsystem;
 import frc.robot.subsystems.elevator.ElevatorToPosCommand;
 import frc.robot.subsystems.limelight.LimelightSubsystem;
 import frc.robot.subsystems.swerveDrive.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerveDrive.TunerConstants;
 
 public class RobotContainer {
-    private double MaxSpeed = Math.min(1, TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)); // kSpeedAt12Volts desired top speed
-    private double MaxAngularRate = RotationsPerSecond.of(0.5).in(RadiansPerSecond); // 1/2 of a rotation per second max angular velocity
+    private static double MAX_OPERATOR_SPEED =3; //m/s\
+    private static double MAX_OPERATOR_ROTATIONSPEED =2; //Rad per second
+    
+
+    private double MaxSpeed = Math.min(MAX_OPERATOR_SPEED, TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)); // kSpeedAt12Volts desired top speed
+    private double MaxAngularRate = RotationsPerSecond.of(MAX_OPERATOR_ROTATIONSPEED).in(RadiansPerSecond); // 1/2 of a rotation per second max angular velocity
 
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -49,7 +61,9 @@ public class RobotContainer {
 
     // private final Telemetry logger = new Telemetry(MaxSpeed);
 
-    private final CommandXboxController joystick = new CommandXboxController(0);
+    private final CommandXboxController driverJoystick = new CommandXboxController(0);
+    private final CommandXboxController operatorJoystick = new CommandXboxController(1);
+
     private static final double XBOX_DEADBAND = 0.1;
 
 
@@ -58,6 +72,9 @@ public class RobotContainer {
     public LimelightSubsystem limelightSubsystem; 
     public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
     public final AlgaeGroundSubsystem algaeGroundSubsystem = new AlgaeGroundSubsystem();
+    public final CoralDoorSubsystem coralDoorSubsystem = new CoralDoorSubsystem();
+    public final HangingSubsystem hangingSubsystem = new HangingSubsystem();
+    public final AlgaeRemoverSubsystem algaeRemoverSubsystem = new AlgaeRemoverSubsystem();
 
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
@@ -69,18 +86,19 @@ public class RobotContainer {
         SmartDashboard.putData("Auto Mode", autoChooser);
         limelightSubsystem = new LimelightSubsystem(drivetrain, true);
 
-        configureBindings();
+        configureDriverBindings(driverJoystick);
+        configureOperatorBindings(operatorJoystick);
     }
 
-    private void configureBindings() {
+    private void configureDriverBindings(CommandXboxController joystick) {
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(MathUtil.applyDeadband(-joystick.getLeftY(),XBOX_DEADBAND) * MaxSpeed) // Drive forward with negative Y (forward)
+                drive.withVelocityX(MathUtil.applyDeadband(-joystick.getLeftY(), XBOX_DEADBAND) * MaxSpeed) // Drive forward with negative Y (forward)
                     .withVelocityY(MathUtil.applyDeadband(-joystick.getLeftX(), XBOX_DEADBAND) * MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(MathUtil.applyDeadband(-joystick.getRightX(),XBOX_DEADBAND) * MaxAngularRate) // Drive counterclockwise with negative X (left)
+                    .withRotationalRate(MathUtil.applyDeadband(-joystick.getRightX(), XBOX_DEADBAND) * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
         // joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
@@ -105,30 +123,48 @@ public class RobotContainer {
         //joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
         // Algae Ground Testing Controls
-        joystick.rightBumper().onFalse(algaeGroundSubsystem.stopIntakeSequenceCommand())
-            .onTrue(algaeGroundSubsystem.intakeSequenceCommand());
         //joystick.a().onTrue(algaeGroundSubsystem.intakeUntilStalledCommand())
             //.onFalse(algaeGroundSubsystem.holdCommand());
+        //drivetrain.registerTelemetry(logger::telemeterize);
+    }
+
+    public void configureOperatorBindings(CommandXboxController joystick) {
+        //Elevator Testing Controls
+        joystick.a().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.lowPosition, elevatorSubsystem));
+        joystick.b().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.level2Position, elevatorSubsystem));
+        joystick.x().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.level3Position, elevatorSubsystem));
+        joystick.y().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.level4Position, elevatorSubsystem));
+
+        //Coral Door Controls
+        joystick.rightBumper().onTrue(new CoralDoorToPositionCommand(CoralDoorSubsystem.DoorPosition.OPEN, coralDoorSubsystem))
+            .onFalse(new CoralDoorToPositionCommand(CoralDoorSubsystem.DoorPosition.CLOSED, coralDoorSubsystem));
+
+        //Algae Ground Controls
         joystick.leftBumper().onTrue(algaeGroundSubsystem.outtakeCommand())
             .onFalse(algaeGroundSubsystem.holdCommand());
-        
+        joystick.rightBumper().onFalse(algaeGroundSubsystem.stopIntakeSequenceCommand())
+            .onTrue(algaeGroundSubsystem.intakeSequenceCommand());
 
+        //Hanging Controls
+        joystick.povUp().onTrue(hangingSubsystem.extendHangingMechanismCommand);
+        joystick.povDown().onTrue(hangingSubsystem.retractHangingMechanismCommand);
 
-        //Elevator Testing Controls
-         joystick.a().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.lowPosition, elevatorSubsystem));
-         joystick.b().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.level2Position, elevatorSubsystem));
-         joystick.x().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.level3Position, elevatorSubsystem));
-         joystick.y().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.level4Position, elevatorSubsystem));
-
-       
-
-        //drivetrain.registerTelemetry(logger::telemeterize);
+        //Algae Removal Controls
+        joystick.povLeft().onTrue(new ParallelCommandGroup(
+                new MoveAlgaeWristCommand(algaeRemoverSubsystem, AlgaeRemoverSubsystem.WristPositions.DOWN),
+                new SpinAlgaeSpinnyThing(algaeRemoverSubsystem, AlgaeRemoverSubsystem.SpinnySpeeds.FAST)
+            ))
+            .onFalse(new ParallelCommandGroup(
+                new MoveAlgaeWristCommand(algaeRemoverSubsystem, AlgaeRemoverSubsystem.WristPositions.DOWN),
+                new SpinAlgaeSpinnyThing(algaeRemoverSubsystem, AlgaeRemoverSubsystem.SpinnySpeeds.STOPPED)
+            ));
     }
 
     public Command getAutonomousCommand() {
         /* Run the path selected from the auto chooser */
         return autoChooser.getSelected();
     }
+
     private void registerCommands(){
         //register the commands here
         NamedCommands.registerCommand("ElevatorHomingCommand", new ElevatorHomingCommand(elevatorSubsystem));
@@ -138,6 +174,8 @@ public class RobotContainer {
         NamedCommands.registerCommand("ElevatorToLVL2", new ElevatorToPosCommand(ElevatorSubsystem.level2Position, elevatorSubsystem));
         NamedCommands.registerCommand("ElevatorToLVL3", new ElevatorToPosCommand(ElevatorSubsystem.level3Position, elevatorSubsystem));
         NamedCommands.registerCommand("ElevatorToLVL4", new ElevatorToPosCommand(ElevatorSubsystem.level4Position, elevatorSubsystem));
+        NamedCommands.registerCommand("OpenCoralDoor", new CoralDoorToPositionCommand(CoralDoorSubsystem.DoorPosition.OPEN, coralDoorSubsystem));
+        NamedCommands.registerCommand("CloseCoralm??Door", new CoralDoorToPositionCommand(CoralDoorSubsystem.DoorPosition.CLOSED, coralDoorSubsystem));
 
     }
 }

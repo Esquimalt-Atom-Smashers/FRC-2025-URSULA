@@ -11,6 +11,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "ElevatorToLVL2"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "faster path"

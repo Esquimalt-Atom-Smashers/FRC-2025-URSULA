@@ -55,8 +55,9 @@ public class ElevatorSubsystem extends SubsystemBase {
     .velocityConversionFactor(1);
     elevatorConfig.smartCurrentLimit(1,8,50);
 
+    // i: 0.000001
     elevatorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-    .p(0.1).i(0.000001).d(0.0000)
+    .p(0.1).i(0).d(0.0000)
     .outputRange(-.2, .6, ClosedLoopSlot.kSlot0);
     // Set PID values for velocity control in slot 1
         // .p(0.0001, ClosedLoopSlot.kSlot1)

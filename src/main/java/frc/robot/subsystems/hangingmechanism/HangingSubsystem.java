@@ -26,11 +26,11 @@ public class HangingSubsystem extends SubsystemBase{
     private RelativeEncoder winchEncoder = winchMotor.getEncoder();
 
     //Release Servo
-    private Servo releaseServo = new Servo(0); //Check value
+    private Servo releaseServo = new Servo(1); //Check value
 
     public enum ReleaseServoPosition {
-        LATCHED(0.5),
-        FREE(1);
+        LATCHED(1),
+        FREE(0.5);
 
         double value;
 
@@ -59,14 +59,14 @@ public class HangingSubsystem extends SubsystemBase{
         winchConfig.smartCurrentLimit(1,8,50);
 
         winchConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .p(0.1).i(0.00000).d(0.0000)
+        .p(0.1).i(0.0).d(0.0)
         .outputRange(-1, 1, ClosedLoopSlot.kSlot0);
 
 
         winchMotor.configure(winchConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
-        winchController.setReference(0, SparkMax.ControlType.kPosition);
-        setReleaseServoPosition(ReleaseServoPosition.FREE);
+        //winchController.setReference(0, SparkMax.ControlType.kPosition);
 
+        setReleaseServoPosition(ReleaseServoPosition.FREE);
     }
 
     public void setReleaseServoPosition(ReleaseServoPosition position) {
@@ -89,16 +89,20 @@ public class HangingSubsystem extends SubsystemBase{
 
     //Commands
 
-    public SequentialCommandGroup extendHangingMechanismCommand = new SequentialCommandGroup(
-        servoReleaseCommand(),
-        new WinchToPositionCommand(this, -4),
-        new WinchToPositionCommand(this, WinchPosition.EXTENDED)
-    );
+    public SequentialCommandGroup extendHangingMechanismCommand() {
+        return new SequentialCommandGroup(
+            servoReleaseCommand(),
+            new WinchToPositionCommand(this, -4),
+            new WinchToPositionCommand(this, WinchPosition.EXTENDED)
+        );
+    }
 
-    public SequentialCommandGroup retractHangingMechanismCommand = new SequentialCommandGroup(
-       servoLatchCommand(),
-        new WinchToPositionCommand(this, WinchPosition.RETRACTED)  
-    );
+    public SequentialCommandGroup retractHangingMechanismCommand() {
+        return new SequentialCommandGroup(
+            servoLatchCommand(),
+            new WinchToPositionCommand(this, WinchPosition.RETRACTED)  
+        );
+    }
 
     public Command manualRetractCommand() {
         return Commands.runOnce(() -> winchController.setReference(-4, ControlType.kVoltage));    
@@ -110,15 +114,12 @@ public class HangingSubsystem extends SubsystemBase{
             winchMotor.getEncoder().setPosition(0);
         });
     }
+
     public Command servoReleaseCommand() {
         return Commands.runOnce(() -> setReleaseServoPosition(ReleaseServoPosition.FREE));    
     }
+
     public Command servoLatchCommand() {
         return Commands.runOnce(() -> setReleaseServoPosition(ReleaseServoPosition.LATCHED));    
     }
-    
-    
-
-    //Hardware Testing Commands
-
 }

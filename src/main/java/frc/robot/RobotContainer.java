@@ -133,8 +133,8 @@ public class RobotContainer {
 
          joystick.povUp().onTrue(hangingSubsystem.manualRetractCommand())
          .onFalse(hangingSubsystem.stopandZeroMotorCommand());
-         joystick.povLeft().onTrue(hangingSubsystem.retractHangingMechanismCommand);
-         joystick.povRight().onTrue(hangingSubsystem.extendHangingMechanismCommand);
+         joystick.povLeft().onTrue(hangingSubsystem.retractHangingMechanismCommand());
+         joystick.povRight().onTrue(hangingSubsystem.extendHangingMechanismCommand());
 
 
        

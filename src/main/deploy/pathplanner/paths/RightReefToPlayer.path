@@ -3,44 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-<<<<<<<< Updated upstream:src/main/deploy/pathplanner/paths/custom2.path
-        "x": 4.0,
-        "y": 7.0
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 4.0,
-        "y": 7.25
-========
         "x": 3.758,
         "y": 2.851
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.1111250000000004,
-        "y": 2.13225
->>>>>>>> Stashed changes:src/main/deploy/pathplanner/paths/RightReefToPlayer.path
+        "x": 3.502563356159822,
+        "y": 2.6406404109647528
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-<<<<<<<< Updated upstream:src/main/deploy/pathplanner/paths/custom2.path
-        "x": 4.0,
-        "y": 6.20076844262295
+        "x": 1.2170804794520549,
+        "y": 1.049914383561644
       },
       "prevControl": {
-        "x": 4.0,
-        "y": 5.95076844262295
-========
-        "x": 1.5355902777777766,
-        "y": 0.7966145833333326
-      },
-      "prevControl": {
-        "x": 1.7910269216179553,
-        "y": 1.0069741723685803
->>>>>>>> Stashed changes:src/main/deploy/pathplanner/paths/RightReefToPlayer.path
+        "x": 2.449976027394979,
+        "y": 1.9955342465782657
       },
       "nextControl": null,
       "isLocked": false,
@@ -52,32 +33,22 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 0.5,
-    "maxAcceleration": 0.5,
+    "maxVelocity": 4.878,
+    "maxAcceleration": 12.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
-<<<<<<<< Updated upstream:src/main/deploy/pathplanner/paths/custom2.path
-    "velocity": 0,
-    "rotation": 0.0
-========
     "velocity": 0.0,
     "rotation": 142.8152935467669
->>>>>>>> Stashed changes:src/main/deploy/pathplanner/paths/RightReefToPlayer.path
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
-<<<<<<<< Updated upstream:src/main/deploy/pathplanner/paths/custom2.path
-    "velocity": 0,
-    "rotation": 0.0
-========
     "velocity": 0.0,
-    "rotation": 142.815
->>>>>>>> Stashed changes:src/main/deploy/pathplanner/paths/RightReefToPlayer.path
+    "rotation": 149.207
   },
   "useDefaultConstraints": false
 }

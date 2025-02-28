@@ -3,75 +3,35 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.0,
-        "y": 2.0
+        "x": 7.209722222220864,
+        "y": 7.225434027774738
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.044227781829078,
-        "y": 2.0
+        "x": 7.713226381929521,
+        "y": 7.21913422115737
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.0,
-        "y": 2.0
+        "x": 5.9379340277764205,
+        "y": 7.225434027774738
       },
       "prevControl": {
-        "x": 1.5,
-        "y": 2.0
-      },
-      "nextControl": {
-        "x": 2.5,
-        "y": 2.0
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 1.0,
-        "y": 2.0
-      },
-      "prevControl": {
-        "x": 0.5433661417322835,
-        "y": 2.0031889763779525
+        "x": 5.685391541732311,
+        "y": 7.252637464409136
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.93,
-      "rotationDegrees": 90.0
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "ElevatorToLVL1",
-      "waypointRelativePos": 0,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "WaitEvent",
-      "waypointRelativePos": 1.0,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "ElevatorToLVL4",
-      "waypointRelativePos": 1.8957816377171215,
-      "endWaypointRelativePos": null,
-      "command": null
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 0.2,
     "maxAcceleration": 0.5,

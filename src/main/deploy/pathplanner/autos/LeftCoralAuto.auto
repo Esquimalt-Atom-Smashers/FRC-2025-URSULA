@@ -7,13 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "MiddleStarting"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
+            "pathName": "LeftStarting"
           }
         },
         {
@@ -25,7 +19,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.5
+            "waitTime": 0.5
           }
         },
         {
@@ -37,7 +31,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "MiddleReefToPlayer1"
+            "pathName": "LeftReefToPlayer1"
           }
         },
         {
@@ -49,7 +43,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "MiddlePlayerToReef1"
+            "pathName": "LeftPlayerToReef1"
           }
         },
         {
@@ -67,7 +61,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "MiddleScore1"
+            "pathName": "LeftScore1"
           }
         },
         {
@@ -85,7 +79,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "MiddleReefToPlayer2"
+            "pathName": "LeftReefToPlayer2"
           }
         },
         {
@@ -97,7 +91,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "MiddlePlayerToReef2"
+            "pathName": "LeftPlayerToReef2"
           }
         },
         {
@@ -115,7 +109,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "MiddleScore2"
+            "pathName": "LeftScore2"
           }
         },
         {

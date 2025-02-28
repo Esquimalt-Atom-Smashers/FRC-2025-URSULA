@@ -21,6 +21,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 // import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 // import frc.robot.subsystems.Telemetry;
@@ -29,6 +30,8 @@ import frc.robot.subsystems.algaeGround.AlgaeGroundSubsystem;
 import frc.robot.subsystems.algaeGround.AlgaeToPosCommand;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.elevator.ElevatorToPosCommand;
+import frc.robot.subsystems.hangingmechanism.HangingSubsystem;
+import frc.robot.subsystems.hangingmechanism.ReleaseServoCommand;
 import frc.robot.subsystems.elevator.ElevatorToPosCommand;
 import frc.robot.subsystems.limelight.LimelightSubsystem;
 import frc.robot.subsystems.swerveDrive.CommandSwerveDrivetrain;
@@ -58,6 +61,7 @@ public class RobotContainer {
     public LimelightSubsystem limelightSubsystem; 
     public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
     public final AlgaeGroundSubsystem algaeGroundSubsystem = new AlgaeGroundSubsystem();
+    public final HangingSubsystem hangingSubsystem = new HangingSubsystem();
 
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
@@ -80,9 +84,13 @@ public class RobotContainer {
             drivetrain.applyRequest(() ->
                 drive.withVelocityX(MathUtil.applyDeadband(-joystick.getLeftY(),XBOX_DEADBAND) * MaxSpeed*(joystick.getRightTriggerAxis()*2+1)) // Drive forward with negative Y (forward)
                     .withVelocityY(MathUtil.applyDeadband(-joystick.getLeftX(), XBOX_DEADBAND) * MaxSpeed*(joystick.getRightTriggerAxis()*2+1)) // Drive left with negative X (left)
-                    .withRotationalRate(MathUtil.applyDeadband(-joystick.getRightX(),XBOX_DEADBAND) * MaxAngularRate*(joystick.getRightTriggerAxis()*2+1)) // Drive counterclockwise with negative X (left)
+                    .withRotationalRate(0)//MathUtil.applyDeadband(-joystick.getRightX(),XBOX_DEADBAND) * MaxAngularRate*(joystick.getRightTriggerAxis()*2+1)) // Drive counterclockwise with negative X (left)
             )
         );
+
+        hangingSubsystem.setDefaultCommand(new RunCommand(() -> 
+            hangingSubsystem.setWinchPosition(hangingSubsystem.getWinchPosition() + joystick.getRightY())
+        ));
         // joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
         // joystick.b().whileTrue(drivetrain.applyRequest(() ->
         //     point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))

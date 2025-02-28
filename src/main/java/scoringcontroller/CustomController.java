@@ -25,7 +25,29 @@ public class CustomController extends GenericHID implements Sendable {
     /** 3 button. */
     k3(3),
     /** 4 button. */
-    k4(4);
+    k4(4),
+    /** 5 button. */
+    k5(5),
+    /** 6 button. */
+    k6(6),
+    /** 7 button. */
+    k7(7),
+    /** 8 button. */
+    k8(8),
+    /** 9 button. */
+    k9(9),
+    /** 10 button. */
+    k10(10),
+    /** 11 button. */
+    k11(11),
+    /** 16 button. */
+    k16(16),
+    /** 17 button. */
+    k17(17),
+    /** 18 button. */
+    k18(18),
+    /** 19 button. */
+    k19(19);
 
     /** Button value. */
     public final int value;
@@ -95,6 +117,247 @@ public class CustomController extends GenericHID implements Sendable {
    */
   public BooleanEvent loop0(EventLoop loop) {
     return button(Button.k0.value, loop);
+  }
+
+  // Repeat for buttons 1 to 11, and 16 to 19
+  public boolean get1Button() {
+    return getRawButton(Button.k1.value);
+  }
+
+  public boolean get1ButtonPressed() {
+    return getRawButtonPressed(Button.k1.value);
+  }
+
+  public boolean get1ButtonReleased() {
+    return getRawButtonReleased(Button.k1.value);
+  }
+
+  public BooleanEvent loop1(EventLoop loop) {
+    return button(Button.k1.value, loop);
+  }
+
+  public boolean get2Button() {
+    return getRawButton(Button.k2.value);
+  }
+
+  public boolean get2ButtonPressed() {
+    return getRawButtonPressed(Button.k2.value);
+  }
+
+  public boolean get2ButtonReleased() {
+    return getRawButtonReleased(Button.k2.value);
+  }
+
+  public BooleanEvent loop2(EventLoop loop) {
+    return button(Button.k2.value, loop);
+  }
+
+  public boolean get3Button() {
+    return getRawButton(Button.k3.value);
+  }
+
+  public boolean get3ButtonPressed() {
+    return getRawButtonPressed(Button.k3.value);
+  }
+
+  public boolean get3ButtonReleased() {
+    return getRawButtonReleased(Button.k3.value);
+  }
+
+  public BooleanEvent loop3(EventLoop loop) {
+    return button(Button.k3.value, loop);
+  }
+
+  public boolean get4Button() {
+    return getRawButton(Button.k4.value);
+  }
+
+  public boolean get4ButtonPressed() {
+    return getRawButtonPressed(Button.k4.value);
+  }
+
+  public boolean get4ButtonReleased() {
+    return getRawButtonReleased(Button.k4.value);
+  }
+
+  public BooleanEvent loop4(EventLoop loop) {
+    return button(Button.k4.value, loop);
+  }
+
+  public boolean get5Button() {
+    return getRawButton(Button.k5.value);
+  }
+
+  public boolean get5ButtonPressed() {
+    return getRawButtonPressed(Button.k5.value);
+  }
+
+  public boolean get5ButtonReleased() {
+    return getRawButtonReleased(Button.k5.value);
+  }
+
+  public BooleanEvent loop5(EventLoop loop) {
+    return button(Button.k5.value, loop);
+  }
+
+  public boolean get6Button() {
+    return getRawButton(Button.k6.value);
+  }
+
+  public boolean get6ButtonPressed() {
+    return getRawButtonPressed(Button.k6.value);
+  }
+
+  public boolean get6ButtonReleased() {
+    return getRawButtonReleased(Button.k6.value);
+  }
+
+  public BooleanEvent loop6(EventLoop loop) {
+    return button(Button.k6.value, loop);
+  }
+
+  public boolean get7Button() {
+    return getRawButton(Button.k7.value);
+  }
+
+  public boolean get7ButtonPressed() {
+    return getRawButtonPressed(Button.k7.value);
+  }
+
+  public boolean get7ButtonReleased() {
+    return getRawButtonReleased(Button.k7.value);
+  }
+
+  public BooleanEvent loop7(EventLoop loop) {
+    return button(Button.k7.value, loop);
+  }
+
+  public boolean get8Button() {
+    return getRawButton(Button.k8.value);
+  }
+
+  public boolean get8ButtonPressed() {
+    return getRawButtonPressed(Button.k8.value);
+  }
+
+  public boolean get8ButtonReleased() {
+    return getRawButtonReleased(Button.k8.value);
+  }
+
+  public BooleanEvent loop8(EventLoop loop) {
+    return button(Button.k8.value, loop);
+  }
+
+  public boolean get9Button() {
+    return getRawButton(Button.k9.value);
+  }
+
+  public boolean get9ButtonPressed() {
+    return getRawButtonPressed(Button.k9.value);
+  }
+
+  public boolean get9ButtonReleased() {
+    return getRawButtonReleased(Button.k9.value);
+  }
+
+  public BooleanEvent loop9(EventLoop loop) {
+    return button(Button.k9.value, loop);
+  }
+
+  public boolean get10Button() {
+    return getRawButton(Button.k10.value);
+  }
+
+  public boolean get10ButtonPressed() {
+    return getRawButtonPressed(Button.k10.value);
+  }
+
+  public boolean get10ButtonReleased() {
+    return getRawButtonReleased(Button.k10.value);
+  }
+
+  public BooleanEvent loop10(EventLoop loop) {
+    return button(Button.k10.value, loop);
+  }
+
+  public boolean get11Button() {
+    return getRawButton(Button.k11.value);
+  }
+
+  public boolean get11ButtonPressed() {
+    return getRawButtonPressed(Button.k11.value);
+  }
+
+  public boolean get11ButtonReleased() {
+    return getRawButtonReleased(Button.k11.value);
+  }
+
+  public BooleanEvent loop11(EventLoop loop) {
+    return button(Button.k11.value, loop);
+  }
+
+  public boolean get16Button() {
+    return getRawButton(Button.k16.value);
+  }
+
+  public boolean get16ButtonPressed() {
+    return getRawButtonPressed(Button.k16.value);
+  }
+
+  public boolean get16ButtonReleased() {
+    return getRawButtonReleased(Button.k16.value);
+  }
+
+  public BooleanEvent loop16(EventLoop loop) {
+    return button(Button.k16.value, loop);
+  }
+
+  public boolean get17Button() {
+    return getRawButton(Button.k17.value);
+  }
+
+  public boolean get17ButtonPressed() {
+    return getRawButtonPressed(Button.k17.value);
+  }
+
+  public boolean get17ButtonReleased() {
+    return getRawButtonReleased(Button.k17.value);
+  }
+
+  public BooleanEvent loop17(EventLoop loop) {
+    return button(Button.k17.value, loop);
+  }
+
+  public boolean get18Button() {
+    return getRawButton(Button.k18.value);
+  }
+
+  public boolean get18ButtonPressed() {
+    return getRawButtonPressed(Button.k18.value);
+  }
+
+  public boolean get18ButtonReleased() {
+    return getRawButtonReleased(Button.k18.value);
+  }
+
+  public BooleanEvent loop18(EventLoop loop) {
+    return button(Button.k18.value, loop);
+  }
+
+  public boolean get19Button() {
+    return getRawButton(Button.k19.value);
+  }
+
+  public boolean get19ButtonPressed() {
+    return getRawButtonPressed(Button.k19.value);
+  }
+
+  public boolean get19ButtonReleased() {
+    return getRawButtonReleased(Button.k19.value);
+  }
+
+  public BooleanEvent loop19(EventLoop loop) {
+    return button(Button.k19.value, loop);
   }
 
   @Override

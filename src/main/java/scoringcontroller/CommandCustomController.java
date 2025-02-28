@@ -63,4 +63,124 @@ public class CommandCustomController extends CommandGenericHID {
   public Trigger bt0(EventLoop loop) {
     return button(CustomController.Button.k0.value, loop);
   }
+
+  public Trigger bt1() {
+    return bt1(CommandScheduler.getInstance().getDefaultButtonLoop());
+  }
+
+  public Trigger bt1(EventLoop loop) {
+    return button(CustomController.Button.k1.value, loop);
+  }
+
+  public Trigger bt2() {
+    return bt2(CommandScheduler.getInstance().getDefaultButtonLoop());
+  }
+
+  public Trigger bt2(EventLoop loop) {
+    return button(CustomController.Button.k2.value, loop);
+  }
+
+  public Trigger bt3() {
+    return bt3(CommandScheduler.getInstance().getDefaultButtonLoop());
+  }
+
+  public Trigger bt3(EventLoop loop) {
+    return button(CustomController.Button.k3.value, loop);
+  }
+
+  public Trigger bt4() {
+    return bt4(CommandScheduler.getInstance().getDefaultButtonLoop());
+  }
+
+  public Trigger bt4(EventLoop loop) {
+    return button(CustomController.Button.k4.value, loop);
+  }
+
+  public Trigger bt5() {
+    return bt5(CommandScheduler.getInstance().getDefaultButtonLoop());
+  }
+
+  public Trigger bt5(EventLoop loop) {
+    return button(CustomController.Button.k5.value, loop);
+  }
+
+  public Trigger bt6() {
+    return bt6(CommandScheduler.getInstance().getDefaultButtonLoop());
+  }
+
+  public Trigger bt6(EventLoop loop) {
+    return button(CustomController.Button.k6.value, loop);
+  }
+
+  public Trigger bt7() {
+    return bt7(CommandScheduler.getInstance().getDefaultButtonLoop());
+  }
+
+  public Trigger bt7(EventLoop loop) {
+    return button(CustomController.Button.k7.value, loop);
+  }
+
+  public Trigger bt8() {
+    return bt8(CommandScheduler.getInstance().getDefaultButtonLoop());
+  }
+
+  public Trigger bt8(EventLoop loop) {
+    return button(CustomController.Button.k8.value, loop);
+  }
+
+  public Trigger bt9() {
+    return bt9(CommandScheduler.getInstance().getDefaultButtonLoop());
+  }
+
+  public Trigger bt9(EventLoop loop) {
+    return button(CustomController.Button.k9.value, loop);
+  }
+
+  public Trigger bt10() {
+    return bt10(CommandScheduler.getInstance().getDefaultButtonLoop());
+  }
+
+  public Trigger bt10(EventLoop loop) {
+    return button(CustomController.Button.k10.value, loop);
+  }
+
+  public Trigger bt11() {
+    return bt11(CommandScheduler.getInstance().getDefaultButtonLoop());
+  }
+
+  public Trigger bt11(EventLoop loop) {
+    return button(CustomController.Button.k11.value, loop);
+  }
+
+  public Trigger bt16() {
+    return bt16(CommandScheduler.getInstance().getDefaultButtonLoop());
+  }
+
+  public Trigger bt16(EventLoop loop) {
+    return button(CustomController.Button.k16.value, loop);
+  }
+
+  public Trigger bt17() {
+    return bt17(CommandScheduler.getInstance().getDefaultButtonLoop());
+  }
+
+  public Trigger bt17(EventLoop loop) {
+    return button(CustomController.Button.k17.value, loop);
+  }
+
+  public Trigger bt18() {
+    return bt18(CommandScheduler.getInstance().getDefaultButtonLoop());
+  }
+
+  public Trigger bt18(EventLoop loop) {
+    return button(CustomController.Button.k18.value, loop);
+  }
+
+  public Trigger bt19() {
+    return bt19(CommandScheduler.getInstance().getDefaultButtonLoop());
+  }
+
+  public Trigger bt19(EventLoop loop) {
+    return button(CustomController.Button.k19.value, loop);
+  }
 }

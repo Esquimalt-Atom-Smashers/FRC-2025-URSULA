@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class HangingSubsystem extends SubsystemBase{
     //Spark Max
-    private SparkMax winchMotor = new SparkMax(0, MotorType.kBrushless);
+    private SparkMax winchMotor = new SparkMax(4, MotorType.kBrushless);
     private SparkMaxConfig winchConfig = new SparkMaxConfig();
     private SparkClosedLoopController winchController = winchMotor.getClosedLoopController();
     private RelativeEncoder winchEncoder = winchMotor.getEncoder();
@@ -90,25 +90,31 @@ public class HangingSubsystem extends SubsystemBase{
     //Commands
 
     public SequentialCommandGroup extendHangingMechanismCommand = new SequentialCommandGroup(
-        new ReleaseServoCommand(this, ReleaseServoPosition.FREE),
+        servoReleaseCommand(),
         new WinchToPositionCommand(this, -4),
         new WinchToPositionCommand(this, WinchPosition.EXTENDED)
     );
 
     public SequentialCommandGroup retractHangingMechanismCommand = new SequentialCommandGroup(
-        new ReleaseServoCommand(this, ReleaseServoPosition.LATCHED),
+       servoLatchCommand(),
         new WinchToPositionCommand(this, WinchPosition.RETRACTED)  
     );
 
     public Command manualRetractCommand() {
-        return Commands.runOnce(() -> winchController.setReference(-2, ControlType.kVoltage));    
-    }//TODO test to see if inverted affects this
+        return Commands.runOnce(() -> winchController.setReference(-4, ControlType.kVoltage));    
+    }
 
     public Command stopandZeroMotorCommand() {
         return Commands.runOnce(() -> {
             winchController.setReference(0, ControlType.kVoltage);
             winchMotor.getEncoder().setPosition(0);
         });
+    }
+    public Command servoReleaseCommand() {
+        return Commands.runOnce(() -> setReleaseServoPosition(ReleaseServoPosition.FREE));    
+    }
+    public Command servoLatchCommand() {
+        return Commands.runOnce(() -> setReleaseServoPosition(ReleaseServoPosition.LATCHED));    
     }
     
     

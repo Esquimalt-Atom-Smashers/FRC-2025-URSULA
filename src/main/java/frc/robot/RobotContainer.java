@@ -31,7 +31,6 @@ import frc.robot.subsystems.algaeGround.AlgaeToPosCommand;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.elevator.ElevatorToPosCommand;
 import frc.robot.subsystems.hangingmechanism.HangingSubsystem;
-import frc.robot.subsystems.hangingmechanism.ReleaseServoCommand;
 import frc.robot.subsystems.elevator.ElevatorToPosCommand;
 import frc.robot.subsystems.limelight.LimelightSubsystem;
 import frc.robot.subsystems.swerveDrive.CommandSwerveDrivetrain;
@@ -84,13 +83,13 @@ public class RobotContainer {
             drivetrain.applyRequest(() ->
                 drive.withVelocityX(MathUtil.applyDeadband(-joystick.getLeftY(),XBOX_DEADBAND) * MaxSpeed*(joystick.getRightTriggerAxis()*2+1)) // Drive forward with negative Y (forward)
                     .withVelocityY(MathUtil.applyDeadband(-joystick.getLeftX(), XBOX_DEADBAND) * MaxSpeed*(joystick.getRightTriggerAxis()*2+1)) // Drive left with negative X (left)
-                    .withRotationalRate(0)//MathUtil.applyDeadband(-joystick.getRightX(),XBOX_DEADBAND) * MaxAngularRate*(joystick.getRightTriggerAxis()*2+1)) // Drive counterclockwise with negative X (left)
+                    .withRotationalRate(MathUtil.applyDeadband(-joystick.getRightX(),XBOX_DEADBAND) * MaxAngularRate*(joystick.getRightTriggerAxis()*2+1)) // Drive counterclockwise with negative X (left)
             )
         );
 
-        hangingSubsystem.setDefaultCommand(new RunCommand(() -> 
-            hangingSubsystem.setWinchPosition(hangingSubsystem.getWinchPosition() + joystick.getRightY())
-        ));
+        // hangingSubsystem.setDefaultCommand(new RunCommand(() -> 
+        //     hangingSubsystem.setWinchPosition(hangingSubsystem.getWinchPosition() + joystick.getRightY())
+        // ));
         // joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
         // joystick.b().whileTrue(drivetrain.applyRequest(() ->
         //     point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
@@ -134,7 +133,7 @@ public class RobotContainer {
 
          joystick.povUp().onTrue(hangingSubsystem.manualRetractCommand())
          .onFalse(hangingSubsystem.stopandZeroMotorCommand());
-         joystick.povDown().onTrue(hangingSubsystem.retractHangingMechanismCommand);
+         joystick.povLeft().onTrue(hangingSubsystem.retractHangingMechanismCommand);
          joystick.povRight().onTrue(hangingSubsystem.extendHangingMechanismCommand);
 
 

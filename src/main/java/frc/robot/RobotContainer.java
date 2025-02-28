@@ -65,7 +65,7 @@ public class RobotContainer {
     public RobotContainer() {
         //register the named commands for auto
         registerCommands();
-        autoChooser = AutoBuilder.buildAutoChooser("Tests");
+        autoChooser = AutoBuilder.buildAutoChooser("MoveOnly");
         SmartDashboard.putData("Auto Mode", autoChooser);
         limelightSubsystem = new LimelightSubsystem(drivetrain, true);
 

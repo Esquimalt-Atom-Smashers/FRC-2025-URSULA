@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 // import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 // import frc.robot.subsystems.Telemetry;
 import frc.robot.subsystems.elevator.ElevatorHomingCommand;
+import frc.robot.commands.AutomatedScoringCommand;
 import frc.robot.subsystems.algaeGround.AlgaeGroundSubsystem;
 import frc.robot.subsystems.algaeGround.AlgaeToPosCommand;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
@@ -33,6 +34,7 @@ import frc.robot.subsystems.elevator.ElevatorToPosCommand;
 import frc.robot.subsystems.limelight.LimelightSubsystem;
 import frc.robot.subsystems.swerveDrive.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerveDrive.TunerConstants;
+import scoringcontroller.CommandCustomController;
 
 public class RobotContainer {
     private double MaxSpeed = Math.min(1, TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)/3); // kSpeedAt12Volts desired top speed
@@ -51,6 +53,7 @@ public class RobotContainer {
 
     private final CommandXboxController xboxController = new CommandXboxController(0);
     private static final double XBOX_DEADBAND = 0.1;
+    private final CommandCustomController CustomController = new CommandCustomController(1);
 
 
     //Create Subsystems
@@ -125,6 +128,11 @@ public class RobotContainer {
        
 
         //drivetrain.registerTelemetry(logger::telemeterize);
+
+        // ----- Automated Scoring -----
+        // Custom Controller Testing
+        CustomController.bt0().onTrue(new AutomatedScoringCommand());
+
     }
 
     public Command getAutonomousCommand() {

@@ -6,7 +6,7 @@
 
 
 // // Uncomment the program for running on Arduino
-// // #include <Joystick.h>
+// #include <Joystick.h>
 
 // // Hardware declaration
 // const int CORAL_POTENTIOMETER = A0;
@@ -131,19 +131,19 @@
 //   /// Level output
 //   // Level 1
 //   if (levelValue >= 190) {
-//     currentLevel = 21;
+//     currentLevel = 16;
 //     currentLevelLight = LEVEL_1;
 //   // Level 2
 //   } else if (levelValue >= 120) {
-//     currentLevel = 22;
+//     currentLevel = 17;
 //     currentLevelLight = LEVEL_2;
 //   // Level 3
 //   } else if (levelValue >= 55) {
-//     currentLevel = 23;
+//     currentLevel = 18;
 //     currentLevelLight = LEVEL_3;
 //   // Level 4
 //   } else if (levelValue < 55) {
-//     currentLevel = 24;
+//     currentLevel = 19;
 //     currentLevelLight = LEVEL_4;
 //   // Something has gone wrong
 //   } else {

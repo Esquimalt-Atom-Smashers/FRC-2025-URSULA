@@ -39,7 +39,7 @@ public class HangingSubsystem extends SubsystemBase{
 
     public enum WinchPosition {
         RETRACTED(0),
-        EXTENDED(100);
+        EXTENDED(700);
 
         double value;
 
@@ -51,12 +51,14 @@ public class HangingSubsystem extends SubsystemBase{
     public HangingSubsystem() {
         winchConfig.encoder.positionConversionFactor(1)
         .velocityConversionFactor(1);
+        
+        winchConfig.inverted(true);
 
         winchConfig.smartCurrentLimit(1,8,50);
 
         winchConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         .p(0.1).i(0.00000).d(0.0000)
-        .outputRange(-0.5, 0.5, ClosedLoopSlot.kSlot0);
+        .outputRange(-1, 1, ClosedLoopSlot.kSlot0);
 
 
         winchMotor.configure(winchConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);

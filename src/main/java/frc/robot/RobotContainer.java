@@ -49,7 +49,7 @@ public class RobotContainer {
 
     // private final Telemetry logger = new Telemetry(MaxSpeed);
 
-    private final CommandXboxController joystick = new CommandXboxController(0);
+    private final CommandXboxController xboxController = new CommandXboxController(0);
     private static final double XBOX_DEADBAND = 0.1;
 
 
@@ -78,49 +78,49 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(MathUtil.applyDeadband(-joystick.getLeftY(),XBOX_DEADBAND) * MaxSpeed*(joystick.getRightTriggerAxis()*2+1)) // Drive forward with negative Y (forward)
-                    .withVelocityY(MathUtil.applyDeadband(-joystick.getLeftX(), XBOX_DEADBAND) * MaxSpeed*(joystick.getRightTriggerAxis()*2+1)) // Drive left with negative X (left)
-                    .withRotationalRate(MathUtil.applyDeadband(-joystick.getRightX(),XBOX_DEADBAND) * MaxAngularRate*(joystick.getRightTriggerAxis()*2+1)) // Drive counterclockwise with negative X (left)
+                drive.withVelocityX(MathUtil.applyDeadband(-xboxController.getLeftY(),XBOX_DEADBAND) * MaxSpeed*(xboxController.getRightTriggerAxis()*2+1)) // Drive forward with negative Y (forward)
+                    .withVelocityY(MathUtil.applyDeadband(-xboxController.getLeftX(), XBOX_DEADBAND) * MaxSpeed*(xboxController.getRightTriggerAxis()*2+1)) // Drive left with negative X (left)
+                    .withRotationalRate(MathUtil.applyDeadband(-xboxController.getRightX(),XBOX_DEADBAND) * MaxAngularRate*(xboxController.getRightTriggerAxis()*2+1)) // Drive counterclockwise with negative X (left)
             )
         );
-        // joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
-        // joystick.b().whileTrue(drivetrain.applyRequest(() ->
-        //     point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
+        // xboxController.a().whileTrue(drivetrain.applyRequest(() -> brake));
+        // xboxController.b().whileTrue(drivetrain.applyRequest(() ->
+        //     point.withModuleDirection(new Rotation2d(-xboxController.getLeftY(), -xboxController.getLeftX()))
         // // ));
-         // joystick.pov(0).whileTrue(drivetrain.applyRequest(() ->
+         // xboxController.pov(0).whileTrue(drivetrain.applyRequest(() ->
         //     forwardStraight.withVelocityX(0.5).withVelocityY(0))
         // );
-        // joystick.pov(180).whileTrue(drivetrain.applyRequest(() ->
+        // xboxController.pov(180).whileTrue(drivetrain.applyRequest(() ->
         //     forwardStraight.withVelocityX(-0.5).withVelocityY(0))
         // );
 
         // // Run SysId routines when holding back/start and X/Y.
         // // Note that each routine should be run exactly once in a single log.
-        // joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        // joystick.back().and(joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-        // joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-        // joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+        // xboxController.back().and(xboxController.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+        // xboxController.back().and(xboxController.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+        // xboxController.start().and(xboxController.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+        // xboxController.start().and(xboxController.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
         // reset the field-centric heading on left bumper press
-        //joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+        //xboxController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
         // Algae Ground Testing Controls
-        joystick.rightBumper().onFalse(algaeGroundSubsystem.stopIntakeSequenceCommand())
+        xboxController.rightBumper().onFalse(algaeGroundSubsystem.stopIntakeSequenceCommand())
             .onTrue(algaeGroundSubsystem.intakeSequenceCommand());
-        //joystick.a().onTrue(algaeGroundSubsystem.intakeUntilStalledCommand())
+        //xboxController.a().onTrue(algaeGroundSubsystem.intakeUntilStalledCommand())
             //.onFalse(algaeGroundSubsystem.holdCommand());
-        joystick.leftBumper().onTrue(algaeGroundSubsystem.outtakeCommand())
+        xboxController.leftBumper().onTrue(algaeGroundSubsystem.outtakeCommand())
             .onFalse(algaeGroundSubsystem.holdCommand());
-        joystick.pov(180).onTrue(new AlgaeToPosCommand(algaeGroundSubsystem.PROCESSOR_POSIITON, algaeGroundSubsystem))
+        xboxController.pov(180).onTrue(new AlgaeToPosCommand(algaeGroundSubsystem.PROCESSOR_POSIITON, algaeGroundSubsystem))
             .onFalse(new AlgaeToPosCommand(algaeGroundSubsystem.DRIVE_POSITION, algaeGroundSubsystem));
         
 
 
         //Elevator Testing Controls
-         joystick.a().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.lowPosition, elevatorSubsystem));
-         joystick.b().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.level2Position, elevatorSubsystem));
-         joystick.x().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.level3Position, elevatorSubsystem));
-         joystick.y().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.level4Position, elevatorSubsystem));
+         xboxController.a().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.lowPosition, elevatorSubsystem));
+         xboxController.b().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.level2Position, elevatorSubsystem));
+         xboxController.x().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.level3Position, elevatorSubsystem));
+         xboxController.y().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.level4Position, elevatorSubsystem));
 
        
 

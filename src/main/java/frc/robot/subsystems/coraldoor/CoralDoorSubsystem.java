@@ -23,7 +23,7 @@ public class CoralDoorSubsystem extends SubsystemBase{
     private DoorPosition doorPosition = DoorPosition.CLOSED;
 
     public CoralDoorSubsystem() {
-        coralServo = new Servo(1); //Check this value later
+        coralServo = new Servo(0); //Check this value later
     }
 
     public void setPosition(DoorPosition position) {

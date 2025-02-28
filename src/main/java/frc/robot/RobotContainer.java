@@ -28,6 +28,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.elevator.ElevatorHomingCommand;
 import frc.robot.subsystems.algaeGround.AlgaeGroundSubsystem;
 import frc.robot.subsystems.algaeGround.AlgaeToPosCommand;
+import frc.robot.subsystems.coraldoor.CoralDoorSubsystem;
+import frc.robot.subsystems.coraldoor.CoralDoorToPositionCommand;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.elevator.ElevatorToPosCommand;
 import frc.robot.subsystems.hangingmechanism.HangingSubsystem;
@@ -61,6 +63,7 @@ public class RobotContainer {
     public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
     public final AlgaeGroundSubsystem algaeGroundSubsystem = new AlgaeGroundSubsystem();
     public final HangingSubsystem hangingSubsystem = new HangingSubsystem();
+    public final CoralDoorSubsystem coralDoorSubsystem = new CoralDoorSubsystem();
 
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
@@ -135,6 +138,9 @@ public class RobotContainer {
          .onFalse(hangingSubsystem.stopandZeroMotorCommand());
          joystick.povLeft().onTrue(hangingSubsystem.retractHangingMechanismCommand());
          joystick.povRight().onTrue(hangingSubsystem.extendHangingMechanismCommand());
+
+         joystick.leftTrigger(0.5).onTrue(new CoralDoorToPositionCommand(CoralDoorSubsystem.DoorPosition.OPEN, coralDoorSubsystem))
+         .onFalse(new CoralDoorToPositionCommand(CoralDoorSubsystem.DoorPosition.CLOSED, coralDoorSubsystem));
 
 
        

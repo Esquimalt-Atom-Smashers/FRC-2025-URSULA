@@ -15,4 +15,9 @@ public class CoralDoorToPositionCommand extends Command{
     public void initialize() {
         coralDoorSubsystem.setPosition(targetPosition);
     }
+
+    @Override
+    public boolean isFinished() {
+        return true;
+    }
 }

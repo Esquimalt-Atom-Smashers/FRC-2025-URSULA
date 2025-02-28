@@ -28,6 +28,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.elevator.ElevatorHomingCommand;
 import frc.robot.subsystems.algaeGround.AlgaeGroundSubsystem;
 import frc.robot.subsystems.algaeGround.AlgaeToPosCommand;
+import frc.robot.subsystems.algaeremover.AlgaeRemoverSubsystem;
+import frc.robot.subsystems.algaeremover.MoveAlgaeWristCommand;
 import frc.robot.subsystems.coraldoor.CoralDoorSubsystem;
 import frc.robot.subsystems.coraldoor.CoralDoorToPositionCommand;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
@@ -64,6 +66,7 @@ public class RobotContainer {
     public final AlgaeGroundSubsystem algaeGroundSubsystem = new AlgaeGroundSubsystem();
     public final HangingSubsystem hangingSubsystem = new HangingSubsystem();
     public final CoralDoorSubsystem coralDoorSubsystem = new CoralDoorSubsystem();
+    public final AlgaeRemoverSubsystem algaeRemoverSubsystem = new AlgaeRemoverSubsystem();
 
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
@@ -134,13 +137,18 @@ public class RobotContainer {
 
          //Hang Testing Controls
 
-         joystick.povUp().onTrue(hangingSubsystem.manualRetractCommand())
-         .onFalse(hangingSubsystem.stopandZeroMotorCommand());
-         joystick.povLeft().onTrue(hangingSubsystem.retractHangingMechanismCommand());
-         joystick.povRight().onTrue(hangingSubsystem.extendHangingMechanismCommand());
+        //  joystick.povUp().onTrue(hangingSubsystem.manualRetractCommand())
+        //  .onFalse(hangingSubsystem.stopandZeroMotorCommand());
+        //  joystick.povLeft().onTrue(hangingSubsystem.retractHangingMechanismCommand());
+        //  joystick.povRight().onTrue(hangingSubsystem.extendHangingMechanismCommand());
 
-         joystick.leftTrigger(0.5).onTrue(new CoralDoorToPositionCommand(CoralDoorSubsystem.DoorPosition.OPEN, coralDoorSubsystem))
-         .onFalse(new CoralDoorToPositionCommand(CoralDoorSubsystem.DoorPosition.CLOSED, coralDoorSubsystem));
+        joystick.povUp().onTrue(algaeRemoverSubsystem.removeUpperAlgae);
+        joystick.povDown().onTrue(algaeRemoverSubsystem.removeLowerAlgae);
+
+        joystick.leftTrigger(0.5).onTrue(new MoveAlgaeWristCommand(algaeRemoverSubsystem, AlgaeRemoverSubsystem.WristPositions.UP));
+
+        //  joystick.leftTrigger(0.5).onTrue(new CoralDoorToPositionCommand(CoralDoorSubsystem.DoorPosition.OPEN, coralDoorSubsystem))
+        //  .onFalse(new CoralDoorToPositionCommand(CoralDoorSubsystem.DoorPosition.CLOSED, coralDoorSubsystem));
 
 
        

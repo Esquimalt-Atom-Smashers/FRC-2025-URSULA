@@ -17,13 +17,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class AlgaeRemoverSubsystem extends SubsystemBase{
     //Wrist Motor
-    private SparkMax wristMotor = new SparkMax(0, MotorType.kBrushless);
+    private SparkMax wristMotor = new SparkMax(5, MotorType.kBrushless);
     private SparkMaxConfig wristConfig = new SparkMaxConfig();
     private SparkClosedLoopController wristController = wristMotor.getClosedLoopController();
     private RelativeEncoder wristEncoder = wristMotor.getEncoder();
 
     //Spinning Motor
-    private SparkMax spinnyMotor = new SparkMax(1, MotorType.kBrushed); //no encoder for spinny motor
+    private SparkMax spinnyMotor = new SparkMax(6, MotorType.kBrushed); //no encoder for spinny motor
     private SparkMaxConfig spinnyConfig = new SparkMaxConfig();
    
     public enum SpinnyPowers {
@@ -67,7 +67,7 @@ public class AlgaeRemoverSubsystem extends SubsystemBase{
         wristController.setReference(0, SparkMax.ControlType.kPosition);
 
         //Spinning Motor
-        spinnyConfig.smartCurrentLimit(4);
+        spinnyConfig.smartCurrentLimit(4); 
         spinnyMotor.configure(spinnyConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
         spinnyMotor.setVoltage(0);
     }
@@ -104,6 +104,4 @@ public class AlgaeRemoverSubsystem extends SubsystemBase{
         new MoveAlgaeWristCommand(this, WristPositions.DOWN),
         new SpinAlgaeSpinnyThing(this, SpinnyPowers.STOPPED)
     );
-
-   
 }

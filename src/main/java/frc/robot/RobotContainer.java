@@ -21,14 +21,18 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 // import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 // import frc.robot.subsystems.Telemetry;
 import frc.robot.subsystems.elevator.ElevatorHomingCommand;
 import frc.robot.subsystems.algaeGround.AlgaeGroundSubsystem;
 import frc.robot.subsystems.algaeGround.AlgaeToPosCommand;
+import frc.robot.subsystems.coraldoor.CoralDoorSubsystem;
+import frc.robot.subsystems.coraldoor.CoralDoorToPositionCommand;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.elevator.ElevatorToPosCommand;
+import frc.robot.subsystems.hangingmechanism.HangingSubsystem;
 import frc.robot.subsystems.elevator.ElevatorToPosCommand;
 import frc.robot.subsystems.limelight.LimelightSubsystem;
 import frc.robot.subsystems.swerveDrive.CommandSwerveDrivetrain;
@@ -58,6 +62,8 @@ public class RobotContainer {
     public LimelightSubsystem limelightSubsystem; 
     public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
     public final AlgaeGroundSubsystem algaeGroundSubsystem = new AlgaeGroundSubsystem();
+    public final HangingSubsystem hangingSubsystem = new HangingSubsystem();
+    public final CoralDoorSubsystem coralDoorSubsystem = new CoralDoorSubsystem();
 
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
@@ -65,7 +71,7 @@ public class RobotContainer {
     public RobotContainer() {
         //register the named commands for auto
         registerCommands();
-        autoChooser = AutoBuilder.buildAutoChooser("Tests");
+        autoChooser = AutoBuilder.buildAutoChooser("ScoreL1FromCenter");
         SmartDashboard.putData("Auto Mode", autoChooser);
         limelightSubsystem = new LimelightSubsystem(drivetrain, true);
 
@@ -83,6 +89,10 @@ public class RobotContainer {
                     .withRotationalRate(MathUtil.applyDeadband(-joystick.getRightX(),XBOX_DEADBAND) * MaxAngularRate*(joystick.getRightTriggerAxis()*2+1)) // Drive counterclockwise with negative X (left)
             )
         );
+
+        // hangingSubsystem.setDefaultCommand(new RunCommand(() -> 
+        //     hangingSubsystem.setWinchPosition(hangingSubsystem.getWinchPosition() + joystick.getRightY())
+        // ));
         // joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
         // joystick.b().whileTrue(drivetrain.applyRequest(() ->
         //     point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
@@ -102,7 +112,7 @@ public class RobotContainer {
         // joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
         // reset the field-centric heading on left bumper press
-        //joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+        joystick.start().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
         // Algae Ground Testing Controls
         joystick.rightBumper().onFalse(algaeGroundSubsystem.stopIntakeSequenceCommand())
@@ -111,7 +121,7 @@ public class RobotContainer {
             //.onFalse(algaeGroundSubsystem.holdCommand());
         joystick.leftBumper().onTrue(algaeGroundSubsystem.outtakeCommand())
             .onFalse(algaeGroundSubsystem.holdCommand());
-        joystick.pov(180).onTrue(new AlgaeToPosCommand(algaeGroundSubsystem.PROCESSOR_POSIITON, algaeGroundSubsystem))
+        joystick.povDown().onTrue(new AlgaeToPosCommand(algaeGroundSubsystem.PROCESSOR_POSIITON, algaeGroundSubsystem))
             .onFalse(new AlgaeToPosCommand(algaeGroundSubsystem.DRIVE_POSITION, algaeGroundSubsystem));
         
 
@@ -121,6 +131,17 @@ public class RobotContainer {
          joystick.b().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.level2Position, elevatorSubsystem));
          joystick.x().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.level3Position, elevatorSubsystem));
          joystick.y().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.level4Position, elevatorSubsystem));
+
+         //Hang Testing Controls
+
+         joystick.povUp().onTrue(hangingSubsystem.manualRetractCommand())
+         .onFalse(hangingSubsystem.stopandZeroMotorCommand());
+         joystick.povLeft().onTrue(hangingSubsystem.retractHangingMechanismCommand());
+         joystick.povRight().onTrue(hangingSubsystem.extendHangingMechanismCommand());
+
+         joystick.leftTrigger(0.5).onTrue(new CoralDoorToPositionCommand(CoralDoorSubsystem.DoorPosition.OPEN, coralDoorSubsystem))
+         .onFalse(new CoralDoorToPositionCommand(CoralDoorSubsystem.DoorPosition.CLOSED, coralDoorSubsystem));
+
 
        
 
@@ -140,6 +161,8 @@ public class RobotContainer {
         NamedCommands.registerCommand("ElevatorToLVL2", new ElevatorToPosCommand(ElevatorSubsystem.level2Position, elevatorSubsystem));
         NamedCommands.registerCommand("ElevatorToLVL3", new ElevatorToPosCommand(ElevatorSubsystem.level3Position, elevatorSubsystem));
         NamedCommands.registerCommand("ElevatorToLVL4", new ElevatorToPosCommand(ElevatorSubsystem.level4Position, elevatorSubsystem));
+        NamedCommands.registerCommand("OpenCoralDoor", new CoralDoorToPositionCommand(CoralDoorSubsystem.DoorPosition.OPEN, coralDoorSubsystem));
+        NamedCommands.registerCommand("CloseCoralDoor", new CoralDoorToPositionCommand(CoralDoorSubsystem.DoorPosition.CLOSED, coralDoorSubsystem));
 
     }
 }

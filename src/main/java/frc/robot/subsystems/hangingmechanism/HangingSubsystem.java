@@ -13,6 +13,8 @@ import com.revrobotics.spark.config.MAXMotionConfig.MAXMotionPositionMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -89,6 +91,7 @@ public class HangingSubsystem extends SubsystemBase{
 
     public SequentialCommandGroup extendHangingMechanismCommand = new SequentialCommandGroup(
         new ReleaseServoCommand(this, ReleaseServoPosition.FREE),
+        new WinchToPositionCommand(this, -4),
         new WinchToPositionCommand(this, WinchPosition.EXTENDED)
     );
 
@@ -96,6 +99,19 @@ public class HangingSubsystem extends SubsystemBase{
         new ReleaseServoCommand(this, ReleaseServoPosition.LATCHED),
         new WinchToPositionCommand(this, WinchPosition.RETRACTED)  
     );
+
+    public Command manualRetractCommand() {
+        return Commands.runOnce(() -> winchController.setReference(-2, ControlType.kVoltage));    
+    }//TODO test to see if inverted affects this
+
+    public Command stopandZeroMotorCommand() {
+        return Commands.runOnce(() -> {
+            winchController.setReference(0, ControlType.kVoltage);
+            winchMotor.getEncoder().setPosition(0);
+        });
+    }
+    
+    
 
     //Hardware Testing Commands
 

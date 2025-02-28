@@ -119,7 +119,7 @@ public class RobotContainer {
             //.onFalse(algaeGroundSubsystem.holdCommand());
         joystick.leftBumper().onTrue(algaeGroundSubsystem.outtakeCommand())
             .onFalse(algaeGroundSubsystem.holdCommand());
-        joystick.pov(180).onTrue(new AlgaeToPosCommand(algaeGroundSubsystem.PROCESSOR_POSIITON, algaeGroundSubsystem))
+        joystick.povDown().onTrue(new AlgaeToPosCommand(algaeGroundSubsystem.PROCESSOR_POSIITON, algaeGroundSubsystem))
             .onFalse(new AlgaeToPosCommand(algaeGroundSubsystem.DRIVE_POSITION, algaeGroundSubsystem));
         
 
@@ -129,6 +129,14 @@ public class RobotContainer {
          joystick.b().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.level2Position, elevatorSubsystem));
          joystick.x().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.level3Position, elevatorSubsystem));
          joystick.y().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.level4Position, elevatorSubsystem));
+
+         //Hang Testing Controls
+
+         joystick.povUp().onTrue(hangingSubsystem.manualRetractCommand())
+         .onFalse(hangingSubsystem.stopandZeroMotorCommand());
+         joystick.povDown().onTrue(hangingSubsystem.retractHangingMechanismCommand);
+         joystick.povRight().onTrue(hangingSubsystem.extendHangingMechanismCommand);
+
 
        
 

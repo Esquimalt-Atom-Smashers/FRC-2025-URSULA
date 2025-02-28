@@ -12,6 +12,7 @@ import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.MAXMotionConfig.MAXMotionPositionMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class AlgaeRemoverSubsystem extends SubsystemBase{
@@ -22,27 +23,23 @@ public class AlgaeRemoverSubsystem extends SubsystemBase{
     private RelativeEncoder wristEncoder = wristMotor.getEncoder();
 
     //Spinning Motor
-    private SparkMax spinnyMotor = new SparkMax(1, MotorType.kBrushed);
+    private SparkMax spinnyMotor = new SparkMax(1, MotorType.kBrushed); //no encoder for spinny motor
     private SparkMaxConfig spinnyConfig = new SparkMaxConfig();
-    private SparkClosedLoopController spinnyController = spinnyMotor.getClosedLoopController();
-    private RelativeEncoder spinnyEncoder = spinnyMotor.getEncoder();
-
-    public enum SpinnySpeeds {
-        FAST(3000),
-        SLOW(1500),
-        STOPPED(0),
-        REVERSE_FAST(-3000),
-        REVERSE_SLOW(-1500);
+   
+    public enum SpinnyPowers {
+        UPPER(4),//Volts
+        LOWER(-4),//Volts TODO check if this is the right direction
+        STOPPED(0);
 
         double value;
 
-        private SpinnySpeeds(double value) {
+        private SpinnyPowers(double value) {
             this.value = value;
         }
     }
 
     public enum WristPositions {
-        UP(24.5),
+        UP(0.5),//half a rotation
         DOWN(0);
 
         double value;
@@ -58,40 +55,21 @@ public class AlgaeRemoverSubsystem extends SubsystemBase{
 
     private void setupMotors() {
         //Wrist Motor
-        wristConfig.encoder.positionConversionFactor(1/1.785)
-        .velocityConversionFactor(1);
+        wristConfig.encoder.positionConversionFactor(1/49);
 
-        wristConfig.smartCurrentLimit(1,8,50);
+        wristConfig.smartCurrentLimit(2);
 
         wristConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .p(0.1).i(0.000001).d(0.0000)
+        .p(0.1).i(0).d(0)
         .outputRange(-0.5, 0.6, ClosedLoopSlot.kSlot0);
-
-        wristConfig.closedLoop.maxMotion
-        .maxVelocity(3000)
-        .maxAcceleration(8000)
-        .allowedClosedLoopError(1).positionMode(MAXMotionPositionMode.kMAXMotionTrapezoidal);
 
         wristMotor.configure(wristConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
         wristController.setReference(0, SparkMax.ControlType.kPosition);
 
         //Spinning Motor
-        
-        spinnyConfig.encoder.positionConversionFactor(1/1.785)
-        .velocityConversionFactor(1);
-
-        spinnyConfig.smartCurrentLimit(1,8,50);
-
-        spinnyConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .p(0.0001).i(0).d(0).velocityFF(1.0 / 5767)
-        .outputRange(-0.6, 0.6, ClosedLoopSlot.kSlot0);
-
-        spinnyConfig.closedLoop.maxMotion
-        .maxVelocity(3000)
-        .maxAcceleration(8000)
-        .allowedClosedLoopError(1);
-
+        spinnyConfig.smartCurrentLimit(4);
         spinnyMotor.configure(spinnyConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+        spinnyMotor.setVoltage(0);
     }
 
     public void setWristPosition(WristPositions position) {
@@ -102,19 +80,30 @@ public class AlgaeRemoverSubsystem extends SubsystemBase{
         wristController.setReference(position, ControlType.kPosition);
     }
 
-    public void setSpinnySpeed(double speed) {
-        spinnyController.setReference(speed, ControlType.kVelocity);
+    public void setSpinnyPower(double speed) {
+        spinnyMotor.setVoltage(speed);
     }
 
-    public void setSpinnySpeed(SpinnySpeeds speed) {
-        setSpinnySpeed(speed.value);
+    public void setSpinnyPower(SpinnyPowers speed) {
+        setSpinnyPower(speed.value);
     }
 
     public double getWristPosition() {
         return wristEncoder.getPosition();
     }
 
-    public double getSpinnySpeed() {
-        return spinnyEncoder.getVelocity();
-    }
+    public SequentialCommandGroup removeUpperAlgae = new SequentialCommandGroup(
+        new SpinAlgaeSpinnyThing(this, SpinnyPowers.UPPER),
+        new MoveAlgaeWristCommand(this, WristPositions.UP),
+        new MoveAlgaeWristCommand(this, WristPositions.DOWN),
+        new SpinAlgaeSpinnyThing(this, SpinnyPowers.STOPPED)
+    );
+
+    public SequentialCommandGroup removeLowerAlgae = new SequentialCommandGroup(
+        new SpinAlgaeSpinnyThing(this, SpinnyPowers.LOWER),
+        new MoveAlgaeWristCommand(this, WristPositions.DOWN),
+        new SpinAlgaeSpinnyThing(this, SpinnyPowers.STOPPED)
+    );
+
+   
 }

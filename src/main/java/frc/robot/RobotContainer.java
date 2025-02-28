@@ -71,7 +71,7 @@ public class RobotContainer {
     public RobotContainer() {
         //register the named commands for auto
         registerCommands();
-        autoChooser = AutoBuilder.buildAutoChooser("MoveOnly");
+        autoChooser = AutoBuilder.buildAutoChooser("ScoreL1FromCenter");
         SmartDashboard.putData("Auto Mode", autoChooser);
         limelightSubsystem = new LimelightSubsystem(drivetrain, true);
 
@@ -161,6 +161,8 @@ public class RobotContainer {
         NamedCommands.registerCommand("ElevatorToLVL2", new ElevatorToPosCommand(ElevatorSubsystem.level2Position, elevatorSubsystem));
         NamedCommands.registerCommand("ElevatorToLVL3", new ElevatorToPosCommand(ElevatorSubsystem.level3Position, elevatorSubsystem));
         NamedCommands.registerCommand("ElevatorToLVL4", new ElevatorToPosCommand(ElevatorSubsystem.level4Position, elevatorSubsystem));
+        NamedCommands.registerCommand("OpenCoralDoor", new CoralDoorToPositionCommand(CoralDoorSubsystem.DoorPosition.OPEN, coralDoorSubsystem));
+        NamedCommands.registerCommand("CloseCoralDoor", new CoralDoorToPositionCommand(CoralDoorSubsystem.DoorPosition.CLOSED, coralDoorSubsystem));
 
     }
 }

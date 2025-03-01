@@ -18,7 +18,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.swerveDrive.CommandSwerveDrivetrain;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
-// import frc.robot.utilities.lists.Constants;
 import frc.robot.subsystems.elevator.ElevatorToPosCommand;
 
 public class AutoPlace extends SequentialCommandGroup {
@@ -31,10 +30,8 @@ public class AutoPlace extends SequentialCommandGroup {
         E("E"),
         F("F");
 
-        // public Pose2d waypoint;
         public String name;
-        private HexSide(/*Pose2d waypoint,*/ String name) {
-            // this.waypoint = waypoint;
+        private HexSide(String name) {
             this.name = name;
         }
     }
@@ -78,8 +75,7 @@ public class AutoPlace extends SequentialCommandGroup {
         // Name format is [side symbol][1/2] (e.g. A1, A2, B1, B2)
         pathName += node.hexSide.name;
         pathName += node.side.name;
-        // If the node is A1, append 1 to the path name
-        // if (node.level == SuperstructurePreset.L1) pathName += "1";
+
         try {
             path = PathPlannerPath.fromPathFile(suppliedPathName.isEmpty() ? pathName : suppliedPathName);
         } catch (Exception e) {
@@ -89,26 +85,6 @@ public class AutoPlace extends SequentialCommandGroup {
 
         // Command to move the robot to the desired position along a path, running until path is complete
         Command move = new ParallelDeadlineGroup(
-            // new InstantCommand(() -> drivetrain.applyRequest(() -> new SwerveRequest.SwerveDriveBrake())).repeatedly().withDeadline(new WaitCommand(0.3)),
-            // new ParallelDeadlineGroup(
-                // AutoBuilder.pathfindToPoseFlipped(path.getStartingHolonomicPose().get(), constraints),
-                // new ConditionalCommand(
-                    // superstructure.setPreset(node.l),
-                    // new ConditionalCommand(
-                        // superstructure.setPreset(SuperstructurePreset.L4_INTERMEDIATE),
-                        // new InstantCommand(() -> {}),
-                        // () -> node.l == SuperstructurePreset.L4 || node.l == SuperstructurePreset.L3
-                    // ),
-                    // () -> node.l == SuperstructurePreset.L2
-                // )
-            // ),
-            // new ParallelDeadlineGroup(
-                // AutoBuilder.followPath(path),
-                // superstructure.setPreset(
-                    // node.l != SuperstructurePreset.MANUAL_OVERRIDE ? node.l
-                    // : (node.scrub != SuperstructurePreset.MANUAL_OVERRIDE) ? node.scrub : SuperstructurePreset.STOW_UPPER
-                // )
-            // )
 
             // On the fly pathfinding to station, or follow the path if supplied
             new ConditionalCommand(
@@ -123,9 +99,6 @@ public class AutoPlace extends SequentialCommandGroup {
                 () -> node.level != 0
             )
         );
-        // new EventTrigger("Align").onTrue(new InstantCommand(() -> CommandScheduler.getInstance().schedule(
-            // superstructure.setPreset(node.l != SuperstructurePreset.MANUAL_OVERRIDE ? node.l : (node.scrub != SuperstructurePreset.MANUAL_OVERRIDE ? node.scrub : SuperstructurePreset.STOW_UPPER))
-        // )));
 
         // Command to move elevator to the desired position and score the coral
         SequentialCommandGroup place = new SequentialCommandGroup(
@@ -135,30 +108,11 @@ public class AutoPlace extends SequentialCommandGroup {
                 .withTimeout(1),
             // Wait some time if going to L3/L4
             new WaitCommand((node.level == 3) || (node.level == 4) ? 1 : 0),
-            // // Shoot out the coral
-            // new ParallelDeadlineGroup(
-            //     // Run until the shoot sensors are cleared, or for a timeout if going to L1
-            //     node.l == SuperstructurePreset.L1 ?
-            //         new WaitCommand(2) :
-            //         new WaitUntilCommand(superstructure.getCoralSensorIntake().negate().and(superstructure.getCoralSensorPlace().negate())),
-            //     new ConditionalCommand(
-            //         // Not going to L1; drive the shooter
-            //         superstructure.setPreset(SuperstructurePreset.getCorrespondingGoState(node.l)),
-            //         // Going to L1; run the L1 shoot sequence
-            //         new SequentialCommandGroup(
-            //             // Ready the coral for shooting (pulling it half-way in) with a timeout
-            //             superstructure.setPresetWithFarSpit(SuperstructurePreset.L1).withTimeout(1),
-            //             // Drive the shooter
-            //             superstructure.setPreset(SuperstructurePreset.L1_GO)
-            //         ),
-            //         () -> node.l != SuperstructurePreset.L1
-            //     )
-            // )
             
             // Score Coral
             new ParallelDeadlineGroup(
                 // Add command to drive right
-                new InstantCommand(() -> drivetrain.setControl(new SwerveRequest.RobotCentric().withVelocityY(0.5))).repeatedly().withTimeout(1)
+                new InstantCommand(() -> drivetrain.setControl(new SwerveRequest.RobotCentric().withVelocityX(-0.5))).repeatedly().withTimeout(1)
             )
         );
 
@@ -167,21 +121,8 @@ public class AutoPlace extends SequentialCommandGroup {
             addCommands(new ParallelDeadlineGroup(move));
             addCommands(place);
 
-            // addCommands(superstructure.setPreset(SuperstructurePreset.STOW_UPPER).until(superstructure::atSetpoint).withTimeout(0.5));
+            // @TODO Add commands for what to do after coral has been placed
 
-            // Back up slightly while stowing the superstructure for a period of time
-            Timer timer = new Timer();
-            addCommands(
-                new ParallelCommandGroup(
-                    // Move the superstructure to the desired stow position
-                    new ElevatorToPosCommand(ElevatorSubsystem.lowPosition, elevator),
-                    // Adjust target speed to accelerate backwards (-X in robot centric)
-                    new SequentialCommandGroup(
-                        new InstantCommand(timer::restart),
-                        new InstantCommand(() -> drivetrain.setControl(new SwerveRequest.RobotCentric().withVelocityX(-timer.get() * 4))).repeatedly()
-                    )
-                ).withDeadline(new WaitCommand(0.5))
-            );
         } else {
             // Simplified place in simulation
             Timer timer = new Timer();
@@ -194,7 +135,7 @@ public class AutoPlace extends SequentialCommandGroup {
                 ),
 
                 /*
-                 * No place or scrub in simulation
+                 * No coral scoring in simulation
                  */
 
                 // Adjust target speed to accelerate backwards (-X in robot centric) for a period of time

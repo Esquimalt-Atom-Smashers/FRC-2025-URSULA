@@ -6,30 +6,25 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
-import java.util.jar.Attributes.Name;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
-import com.fasterxml.jackson.databind.util.Named;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-// import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-// import frc.robot.subsystems.Telemetry;
 import frc.robot.subsystems.elevator.ElevatorHomingCommand;
-import frc.robot.commands.AutomatedScoringCommand;
+import frc.robot.commands.AutoPlace;
+import frc.robot.commands.AutoPlace.Node;
 import frc.robot.subsystems.algaeGround.AlgaeGroundSubsystem;
 import frc.robot.subsystems.algaeGround.AlgaeToPosCommand;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
-import frc.robot.subsystems.elevator.ElevatorToPosCommand;
 import frc.robot.subsystems.elevator.ElevatorToPosCommand;
 import frc.robot.subsystems.limelight.LimelightSubsystem;
 import frc.robot.subsystems.swerveDrive.CommandSwerveDrivetrain;
@@ -39,15 +34,18 @@ import scoringcontroller.CommandCustomController;
 public class RobotContainer {
     private double MaxSpeed = Math.min(1, TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)/3); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(.7).in(RadiansPerSecond); // 1/2 of a rotation per second max angular velocity
+    private int level = 0;
+    private AutoPlace.HexSide hexSide = AutoPlace.HexSide.A;
+    private AutoPlace.Side side = AutoPlace.Side.one;
 
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
             .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
-    private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-    private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-    private final SwerveRequest.RobotCentric forwardStraight = new SwerveRequest.RobotCentric()
-            .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+    // private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+    // private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+    // private final SwerveRequest.RobotCentric forwardStraight = new SwerveRequest.RobotCentric()
+    //         .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
     // private final Telemetry logger = new Telemetry(MaxSpeed);
 
@@ -114,8 +112,8 @@ public class RobotContainer {
             //.onFalse(algaeGroundSubsystem.holdCommand());
         xboxController.leftBumper().onTrue(algaeGroundSubsystem.outtakeCommand())
             .onFalse(algaeGroundSubsystem.holdCommand());
-        xboxController.pov(180).onTrue(new AlgaeToPosCommand(algaeGroundSubsystem.PROCESSOR_POSIITON, algaeGroundSubsystem))
-            .onFalse(new AlgaeToPosCommand(algaeGroundSubsystem.DRIVE_POSITION, algaeGroundSubsystem));
+        xboxController.pov(180).onTrue(new AlgaeToPosCommand(AlgaeGroundSubsystem.PROCESSOR_POSIITON, algaeGroundSubsystem))
+            .onFalse(new AlgaeToPosCommand(AlgaeGroundSubsystem.DRIVE_POSITION, algaeGroundSubsystem));
         
 
 
@@ -131,8 +129,69 @@ public class RobotContainer {
 
         // ----- Automated Scoring -----
         // Custom Controller Testing
-        CustomController.bt0().onTrue(new AutomatedScoringCommand());
+        CustomController.bt1().onTrue(new RunCommand(() -> {
+            hexSide = AutoPlace.HexSide.A;
+            side = AutoPlace.Side.one;
+        }));
+        CustomController.bt2().onTrue(new RunCommand(() -> {
+            hexSide = AutoPlace.HexSide.A;
+            side = AutoPlace.Side.two;
+        }));
+        CustomController.bt3().onTrue(new RunCommand(() -> {
+            hexSide = AutoPlace.HexSide.B;
+            side = AutoPlace.Side.one;
+        }));
+        CustomController.bt4().onTrue(new RunCommand(() -> {
+            hexSide = AutoPlace.HexSide.B;
+            side = AutoPlace.Side.two;
+        }));
+        CustomController.bt5().onTrue(new RunCommand(() -> {
+            hexSide = AutoPlace.HexSide.C;
+            side = AutoPlace.Side.one;
+        }));
+        CustomController.bt6().onTrue(new RunCommand(() -> {
+            hexSide = AutoPlace.HexSide.C;
+            side = AutoPlace.Side.two;
+        }));
+        CustomController.bt7().onTrue(new RunCommand(() -> {
+            hexSide = AutoPlace.HexSide.D;
+            side = AutoPlace.Side.one;
+        }));
+        CustomController.bt8().onTrue(new RunCommand(() -> {
+            hexSide = AutoPlace.HexSide.D;
+            side = AutoPlace.Side.two;
+        }));
+        CustomController.bt9().onTrue(new RunCommand(() -> {
+            hexSide = AutoPlace.HexSide.E;
+            side = AutoPlace.Side.one;
+        }));
+        CustomController.bt10().onTrue(new RunCommand(() -> {
+            hexSide = AutoPlace.HexSide.E;
+            side = AutoPlace.Side.two;
+        }));
+        CustomController.bt11().onTrue(new RunCommand(() -> {
+            hexSide = AutoPlace.HexSide.F;
+            level = 1;
+        }));
+        CustomController.bt12().onTrue(new RunCommand(() -> {
+            hexSide = AutoPlace.HexSide.F;
+            level = 2;
+        }));
+        CustomController.bt16().onTrue(new RunCommand(() -> {
+            level = 1;
+        }));
+        CustomController.bt17().onTrue(new RunCommand(() -> {
+            level = 2;
+        }));
+        CustomController.bt18().onTrue(new RunCommand(() -> {
+            level = 3;
+        }));
+        CustomController.bt19().onTrue(new RunCommand(() -> {
+            level = 4;
+        }));
 
+        xboxController.leftBumper().whileTrue(new AutoPlace(drivetrain, elevatorSubsystem, 
+                                                                new Node(level, hexSide, side)));
     }
 
     public Command getAutonomousCommand() {

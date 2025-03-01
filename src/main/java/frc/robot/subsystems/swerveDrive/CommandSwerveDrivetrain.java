@@ -294,6 +294,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 //     printTimer.reset();
                 //     System.out.println("Limelight updatedPose");
                 // }
+
+                System.out.println("Limelight updatedPose");
+                var updatedPose = getState().Pose;
+                System.out.println("Updated Robot Position: " + updatedPose);
             }
     }
 

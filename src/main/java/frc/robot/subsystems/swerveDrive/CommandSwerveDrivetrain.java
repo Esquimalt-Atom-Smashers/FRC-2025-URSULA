@@ -278,22 +278,17 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             });
         }
 
-            var driveState = getState();
+            SwerveDriveState driveState = getState();
             double headingDeg = driveState.Pose.getRotation().getDegrees();
-            double omegaRps = Units.radiansToRotations(driveState.Speeds.omegaRadiansPerSecond);
+            double angularVelocity = Units.radiansToDegrees(driveState.Speeds.omegaRadiansPerSecond);
 
             LimelightHelpers.SetRobotOrientation("limelight", headingDeg, 0, 0, 0, 0, 0);
-            var llMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
-            if (llMeasurement != null && llMeasurement.tagCount > 0 && omegaRps < 2.0) {
-                Matrix<N3, N1> visionMeasurementStdDevs = new Matrix<>(
-                    Nat.N3(), Nat.N1(), new double[] {llMeasurement.avgTagDist, llMeasurement.avgTagDist,1});
-                setVisionMeasurementStdDevs(visionMeasurementStdDevs);
-                setStateStdDevs(VecBuilder.fill(.7,.7, 9999999));
-                addVisionMeasurement(llMeasurement.pose, Utils.fpgaToCurrentTime(llMeasurement.timestampSeconds));
-                // if(printTimer.hasElapsed(.5)){
-                //     printTimer.reset();
-                //     System.out.println("Limelight updatedPose");
-                // }
+            LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+            if (mt2 != null && mt2.tagCount > 0 && angularVelocity <= 720) {
+                setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7, 9999999));
+                addVisionMeasurement(
+                    mt2.pose,
+                    Utils.fpgaToCurrentTime(mt2.timestampSeconds));
 
                 System.out.println("Limelight updatedPose");
                 var updatedPose = getState().Pose;

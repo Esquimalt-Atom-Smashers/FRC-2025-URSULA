@@ -24,7 +24,7 @@ public class AlgaeRemoverSubsystem extends SubsystemBase{
 
     //Spinning Motor
     private SparkMax spinnyMotor = new SparkMax(6, MotorType.kBrushed); //no encoder for spinny motor
-    private SparkMaxConfig spinnyConfig = new SparkMaxConfig();
+    //private SparkMaxConfig spinnyConfig = new SparkMaxConfig();
    
     public enum SpinnyPowers {
         UPPER(4),//Volts
@@ -67,8 +67,8 @@ public class AlgaeRemoverSubsystem extends SubsystemBase{
         wristController.setReference(0, SparkMax.ControlType.kPosition);
 
         //Spinning Motor
-        spinnyConfig.smartCurrentLimit(4); 
-        spinnyMotor.configure(spinnyConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+        //spinnyConfig.smartCurrentLimit(4); 
+        //spinnyMotor.configure(spinnyConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
         spinnyMotor.setVoltage(0);
     }
 

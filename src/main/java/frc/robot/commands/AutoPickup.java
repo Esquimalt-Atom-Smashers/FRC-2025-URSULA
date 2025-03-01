@@ -21,7 +21,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.swerveDrive.CommandSwerveDrivetrain;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
-// import frc.robot.utilities.lists.Constants;
 import frc.robot.subsystems.elevator.ElevatorToPosCommand;
 
 public class AutoPickup extends SequentialCommandGroup {
@@ -36,13 +35,6 @@ public class AutoPickup extends SequentialCommandGroup {
         }
     }
 
-    // For auto selector (maybe should be someplace else)
-    public static enum AutoSegment {
-        DO_FIRST,
-        DO_SECOND,
-        DO_THIRD
-    }
-
     public static CoralStationSide getCoralSide(Pose2d pose) {
         // 4 meters is the midline of the field
         if (!DriverStation.getAlliance().isPresent() || DriverStation.getAlliance().get() == Alliance.Blue) {
@@ -52,11 +44,11 @@ public class AutoPickup extends SequentialCommandGroup {
         }
     }
 
-    public AutoPickup(CommandSwerveDrivetrain drivetrain, ElevatorSubsystem elevatorSubsystem, Supplier<CoralStationSide> side) {
-        this(drivetrain, elevatorSubsystem, side, "");
+    public AutoPickup(CommandSwerveDrivetrain drivetrain, ElevatorSubsystem elevatorSubsystem, Supplier<CoralStationSide> side, boolean level1) {
+        this(drivetrain, elevatorSubsystem, side, level1, "");
     }
 
-    public AutoPickup(CommandSwerveDrivetrain drivetrain, ElevatorSubsystem elevatorSubsystem, Supplier<CoralStationSide> side, String suppliedPathName) {
+    public AutoPickup(CommandSwerveDrivetrain drivetrain, ElevatorSubsystem elevatorSubsystem, Supplier<CoralStationSide> side, boolean level1, String suppliedPathName) {
         // Create the constraints to use while pathfinding
         PathConstraints constraints = new PathConstraints(
                 3.0, 4.0,
@@ -83,24 +75,18 @@ public class AutoPickup extends SequentialCommandGroup {
             // Set to leftPath if no supplied path name is given, but otherwise unused
             suppliedPath = leftPath;
         }
-        // ConditionalCommand pathfind = 
-            // new ConditionalCommand(
-                // AutoBuilder.pathfindThenFollowPath(leftPath, constraints),
-                // AutoBuilder.pathfindThenFollowPath(rightPath, constraints),
-                // () -> side.get() == CoralStationSide.LEFT
-            // );
+
         if (!Utils.isSimulation()) {
             addCommands(
                 new ConditionalCommand(
                     new SequentialCommandGroup(
-                        // Perform the auto pickup sequence until the coral sensor is triggered
+                        // Perform the auto pickup sequence
                         new ParallelCommandGroup(
-                            // new PrintCommand("Auto pickup running").repeatedly(),
-                            // Move the superstructure to the stow position for some time, then to receive position; all while driving the coral intake
+                            // Move the elevator to the appropriate position based on the level1 flag
                             new SequentialCommandGroup(
-                                new ElevatorToPosCommand(ElevatorSubsystem.lowPosition, elevatorSubsystem)
+                                new ElevatorToPosCommand(level1 ? ElevatorSubsystem.level2Position : ElevatorSubsystem.lowPosition, elevatorSubsystem)
                             ),
-                            // Drive to the station utnil the coral sensor is triggered
+                            // Drive to the station
                             new SequentialCommandGroup(
                                 new ParallelCommandGroup(
                                     // Follow the suppplied path if given, otherwise pathfind and then follow the left or right path
@@ -113,7 +99,6 @@ public class AutoPickup extends SequentialCommandGroup {
                                         AutoBuilder.followPath(suppliedPath),
                                         () -> suppliedPathName.isEmpty()
                                     ),
-                                    // pathfind.withTimeout(3).repeatedly(),
                                     new PrintCommand("Pathfinding to station").repeatedly()
                                 ),
                                 // Path may end with a target velocity, to drive robot into station, do so for a short time
@@ -122,24 +107,16 @@ public class AutoPickup extends SequentialCommandGroup {
                                 new InstantCommand(() -> drivetrain.applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0)))
                             ).withName("Pathfinding to station")
                         ).withDeadline(
-                            // Wait until the coral intake sensor is triggered (the coral place sensor may not be triggered)
+                            // Wait 1 second after reaching the station to ensure the robot is aligned
                             new WaitCommand(1)
                         ),
-                        // new ConditionalCommand(
-                        //    new InstantCommand(() -> drivetrain.resetPose(leftPath.getStartingDifferentialPose())),
-                        //    new InstantCommand(() -> drivetrain.resetPose(rightPath.getStartingDifferentialPose())),
-                        //    () -> side.get() == CoralStationSide.LEFT
-                        // ),
-                        //.until(() -> superstructure.getCoralSensorIntake().debounce(0.2).getAsBoolean() && superstructure.getCoralSensorPlace().debounce(0.2).getAsBoolean()),
                         new PrintCommand("Finished auto align"),
-                        // new PrintCommand("Actually finished auto align"),
                         // Move back from the station, while centering the coral in receive, for a short period
                         new ParallelCommandGroup(
                             new ElevatorToPosCommand(ElevatorSubsystem.lowPosition, elevatorSubsystem),
                             new InstantCommand(() -> drivetrain.setControl(new SwerveRequest.RobotCentric().withVelocityX(-2))).repeatedly()
                         ).withDeadline(new WaitCommand(0.25)),
                         new PrintCommand("Drove backwards")
-                        // new AlignRequestToF(drivetrain, superstructure.getToFLeft(), superstructure.getToFRight(), 1).withDeadline(new WaitCommand(1))
                     ),
                     // Do nothing if given the flag
                     new InstantCommand(() -> {}),

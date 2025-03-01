@@ -52,7 +52,7 @@
     "rotation": 150.0
   },
   "reversed": false,
-  "folder": "Auto Place",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0.0,
     "rotation": 150.0

@@ -43,31 +43,23 @@ public class CommandCustomController extends CommandGenericHID {
   }
 
   /**
-   * Constructs a Trigger instance around the 0 button's digital signal.
+   * Constructs a Trigger instance around the 1 button's digital signal.
    *
-   * @return a Trigger instance representing the 0 button's digital signal attached
+   * @return a Trigger instance representing the 1 button's digital signal attached
    *     to the {@link CommandScheduler#getDefaultButtonLoop() default scheduler button loop}.
-   * @see #0(EventLoop)
+   * @see #1(EventLoop)
    */
-  public Trigger bt0() {
-    return bt0(CommandScheduler.getInstance().getDefaultButtonLoop());
-  }
-
-  /**
-   * Constructs a Trigger instance around the 0 button's digital signal.
-   *
-   * @param loop the event loop instance to attach the event to.
-   * @return a Trigger instance representing the 0 button's digital signal attached
-   *     to the given loop.
-   */
-  public Trigger bt0(EventLoop loop) {
-    return button(CustomController.Button.k0.value, loop);
-  }
-
   public Trigger bt1() {
     return bt1(CommandScheduler.getInstance().getDefaultButtonLoop());
   }
 
+  /**
+   * Constructs a Trigger instance around the 1 button's digital signal.
+   *
+   * @param loop the event loop instance to attach the event to.
+   * @return a Trigger instance representing the 1 button's digital signal attached
+   *     to the given loop.
+   */
   public Trigger bt1(EventLoop loop) {
     return button(CustomController.Button.k1.value, loop);
   }
@@ -150,6 +142,14 @@ public class CommandCustomController extends CommandGenericHID {
 
   public Trigger bt11(EventLoop loop) {
     return button(CustomController.Button.k11.value, loop);
+  }
+
+  public Trigger bt12() {
+    return bt12(CommandScheduler.getInstance().getDefaultButtonLoop());
+  }
+
+  public Trigger bt12(EventLoop loop) {
+    return button(CustomController.Button.k12.value, loop);
   }
 
   public Trigger bt16() {

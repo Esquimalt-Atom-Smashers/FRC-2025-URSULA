@@ -16,8 +16,6 @@ import edu.wpi.first.wpilibj.event.EventLoop;
 public class CustomController extends GenericHID implements Sendable {
   /** Represents a digital button on the custom controller. */
   public enum Button {
-    /** 0 button. */
-    k0(0),
     /** 1 button. */
     k1(1),
     /** 2 button. */
@@ -40,6 +38,8 @@ public class CustomController extends GenericHID implements Sendable {
     k10(10),
     /** 11 button. */
     k11(11),
+    /** 12 button. */
+    k12(12),
     /** 16 button. */
     k16(16),
     /** 17 button. */
@@ -82,60 +82,44 @@ public class CustomController extends GenericHID implements Sendable {
   }
 
   /**
-   * Read the value of the 0 button on the controller.
+   * Read the value of the 1 button on the controller.
    *
    * @return The state of the button.
    */
-  public boolean get0Button() {
-    return getRawButton(Button.k0.value);
+  public boolean get1Button() {
+    return getRawButton(Button.k1.value);
   }
 
   /**
-   * Whether the 0 button was pressed since the last check.
+   * Whether the 1 button was pressed since the last check.
    *
    * @return Whether the button was pressed since the last check.
    */
-  public boolean get0ButtonPressed() {
-    return getRawButtonPressed(Button.k0.value);
+  public boolean get1ButtonPressed() {
+    return getRawButtonPressed(Button.k1.value);
   }
 
   /**
-   * Whether the 0 button was released since the last check.
+   * Whether the 1 button was released since the last check.
    *
    * @return Whether the button was released since the last check.
    */
-  public boolean get0ButtonReleased() {
-    return getRawButtonReleased(Button.k0.value);
+  public boolean get1ButtonReleased() {
+    return getRawButtonReleased(Button.k1.value);
   }
 
   /**
-   * Constructs an event instance around the 0 button's digital signal.
+   * Constructs an event instance around the 1 button's digital signal.
    *
    * @param loop the event loop instance to attach the event to.
    * @return an event instance representing the A button's digital signal
    *     attached to the given loop.
    */
-  public BooleanEvent loop0(EventLoop loop) {
-    return button(Button.k0.value, loop);
-  }
-
-  // Repeat for buttons 1 to 11, and 16 to 19
-  public boolean get1Button() {
-    return getRawButton(Button.k1.value);
-  }
-
-  public boolean get1ButtonPressed() {
-    return getRawButtonPressed(Button.k1.value);
-  }
-
-  public boolean get1ButtonReleased() {
-    return getRawButtonReleased(Button.k1.value);
-  }
-
   public BooleanEvent loop1(EventLoop loop) {
     return button(Button.k1.value, loop);
   }
 
+  // Repeat for buttons 2 to 12, and 16 to 19
   public boolean get2Button() {
     return getRawButton(Button.k2.value);
   }
@@ -296,6 +280,22 @@ public class CustomController extends GenericHID implements Sendable {
     return button(Button.k11.value, loop);
   }
 
+  public boolean get12Button() {
+    return getRawButton(Button.k12.value);
+  }
+
+  public boolean get12ButtonPressed() {
+    return getRawButtonPressed(Button.k12.value);
+  }
+
+  public boolean get12ButtonReleased() {
+    return getRawButtonReleased(Button.k12.value);
+  }
+
+  public BooleanEvent loop12(EventLoop loop) {
+    return button(Button.k12.value, loop);
+  }
+
   public boolean get16Button() {
     return getRawButton(Button.k16.value);
   }
@@ -364,6 +364,21 @@ public class CustomController extends GenericHID implements Sendable {
   public void initSendable(SendableBuilder builder) {
     builder.setSmartDashboardType("HID");
     builder.publishConstString("ControllerType", "Custom Controller");
-    builder.addBooleanProperty("0", this::get0Button, null);
+    builder.addBooleanProperty("1", this::get1Button, null);
+    builder.addBooleanProperty("2", this::get2Button, null);
+    builder.addBooleanProperty("3", this::get3Button, null);
+    builder.addBooleanProperty("4", this::get4Button, null);
+    builder.addBooleanProperty("5", this::get5Button, null);
+    builder.addBooleanProperty("6", this::get6Button, null);
+    builder.addBooleanProperty("7", this::get7Button, null);
+    builder.addBooleanProperty("8", this::get8Button, null);
+    builder.addBooleanProperty("9", this::get9Button, null);
+    builder.addBooleanProperty("10", this::get10Button, null);
+    builder.addBooleanProperty("11", this::get11Button, null);
+    builder.addBooleanProperty("12", this::get12Button, null);
+    builder.addBooleanProperty("16", this::get16Button, null);
+    builder.addBooleanProperty("17", this::get17Button, null);
+    builder.addBooleanProperty("18", this::get18Button, null);
+    builder.addBooleanProperty("19", this::get19Button, null);
   }
 }

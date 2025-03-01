@@ -89,40 +89,40 @@
 //   //// Coral output
 //   // A2
 //   if (coralValue >= 299) {
-//     currentCoral = 1;
+//     currentCoral = 2;
 //   // B1
 //   } else if (coralValue >= 282) {
-//     currentCoral = 2;
+//     currentCoral = 3;
 //   // B2
 //   } else if (coralValue >= 246) {
-//     currentCoral = 3;
+//     currentCoral = 4;
 //   // C1
 //   } else if (coralValue >= 213) {
-//     currentCoral = 4;
+//     currentCoral = 5;
 //   // C2
 //   } else if (coralValue >= 180) {
-//     currentCoral = 5;
+//     currentCoral = 6;
 //   // D1
 //   } else if (coralValue >= 150) {
-//     currentCoral = 6;
+//     currentCoral = 7;
 //   // D2
 //   } else if (coralValue >= 115) {
-//     currentCoral = 7;
+//     currentCoral = 8;
 //   // E1
 //   } else if (coralValue >= 78) {
-//     currentCoral = 8;
+//     currentCoral = 9;
 //   // E2
 //   } else if (coralValue >= 47) {
-//     currentCoral = 9;
+//     currentCoral = 10;
 //   // F1
 //   } else if (coralValue >= 12) {
-//     currentCoral = 10;
+//     currentCoral = 11;
 //   // F2
 //   } else if (coralValue >= 1) {
-//     currentCoral = 11;
+//     currentCoral = 12;
 //   // A1
 //   } else if (coralValue < 1) {
-//     currentCoral = 0;
+//     currentCoral = 1;
 //   // Something has gone wrong
 //   } else {
 //     Serial.print("UNKNOWN CORAL VALUE ERROR");
@@ -154,7 +154,7 @@
 //   // Coral
 //   if (currentCoral != -1) {
 //     Joystick.setButton(previousCoral, RELEASED);
-//     digitalWrite(previousCoral-1, LOW);
+//     digitalWrite(previousCoral-2, LOW);
 //     previousCoral = currentCoral;
 //     Joystick.setButton(currentCoral, PRESSED);
 //     if (currentCoral == 0) {
@@ -162,7 +162,7 @@
 //     } else {
 //       digitalWrite(11, LOW);
 //     }
-//     digitalWrite(currentCoral-1, HIGH);
+//     digitalWrite(currentCoral-2, HIGH);
 //   }
 
 //   // Level

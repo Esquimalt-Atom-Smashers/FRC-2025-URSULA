@@ -6,6 +6,7 @@ import com.ctre.phoenix6.Utils;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Nat;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
@@ -23,10 +24,10 @@ public class LimelightSubsystem extends SubsystemBase{
     static NetworkTableEntry Tx = table.getEntry("tx");
     static NetworkTableEntry Ty = table.getEntry("ty");
     static NetworkTableEntry Ta = table.getEntry("ta");
-    static NetworkTableEntry Pipeline = table.getEntry("pipeline");
+    static NetworkTableEntry Pipeline = table.getEntry("pipeli6ne");
     static NetworkTableEntry Tv = table.getEntry("tv"); //are there any valid targets
     private CommandSwerveDrivetrain drivetrain;
-    private boolean useLimelightForPose = false;
+    private boolean useLimelightForPose = true;
     private Timer printTimer=new Timer();
     public LimelightSubsystem(CommandSwerveDrivetrain drivetrain, boolean useLimelightForPose){
         this.drivetrain=drivetrain;
@@ -96,39 +97,35 @@ public class LimelightSubsystem extends SubsystemBase{
     @Override
     public void periodic() {
         /*
-     * This example of adding Limelight is very simple and may not be sufficient for on-field use.
-     * Users typically need to provide a standard deviation that scales with the distance to target
-     * and changes with number of tags available.
-     *
-     * This example is sufficient to show that vision integration is possible, though exact implementation
-     * of how to use vision should be tuned per-robot and to the team's specification.
-     */
-    if (useLimelightForPose) {
-      var driveState = drivetrain.getState();
-      double headingDeg = driveState.Pose.getRotation().getDegrees();
-      double omegaRps = Units.radiansToRotations(driveState.Speeds.omegaRadiansPerSecond);
+        * This example of adding Limelight is very simple and may not be sufficient for on-field use.
+        * Users typically need to provide a standard deviation that scales with the distance to target
+        * and changes with number of tags available.
+        *
+        * This example is sufficient to show that vision integration is possible, though exact implementation
+        * of how to use vision should be tuned per-robot and to the team's specification.
+        */
+        if (useLimelightForPose) {
+            var driveState = drivetrain.getState();
+            double headingDeg = driveState.Pose.getRotation().getDegrees();
+            double omegaRps = Units.radiansToRotations(driveState.Speeds.omegaRadiansPerSecond);
 
-      LimelightHelpers.SetRobotOrientation("limelight", headingDeg, 0, 0, 0, 0, 0);
-      var llMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
-      if (llMeasurement != null && llMeasurement.tagCount > 0 && omegaRps < 2.0) {
-        Matrix<N3, N1> visionMeasurementStdDevs = new Matrix<>(
-            Nat.N3(), Nat.N1(), new double[] {llMeasurement.avgTagDist, llMeasurement.avgTagDist,1});
-        drivetrain.setVisionMeasurementStdDevs(visionMeasurementStdDevs);
-        //drivetrain.setStateStdDevs(odometryMeasurementStdDevs); //can be added later to change odometry trust
-        drivetrain.addVisionMeasurement(llMeasurement.pose, Utils.fpgaToCurrentTime(llMeasurement.timestampSeconds));
-        if(printTimer.hasElapsed(.5)){
+            LimelightHelpers.SetRobotOrientation("limelight", headingDeg, 0, 0, 0, 0, 0);
+            var llMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+            if (llMeasurement != null && llMeasurement.tagCount > 0 && omegaRps < 2.0) {
+                Matrix<N3, N1> visionMeasurementStdDevs = new Matrix<>(
+                    Nat.N3(), Nat.N1(), new double[] {llMeasurement.avgTagDist, llMeasurement.avgTagDist,1});
+                drivetrain.setVisionMeasurementStdDevs(visionMeasurementStdDevs);
+                drivetrain.setStateStdDevs(VecBuilder.fill(.7,.7, 9999999));
+                drivetrain.addVisionMeasurement(llMeasurement.pose, Utils.fpgaToCurrentTime(llMeasurement.timestampSeconds));
+                // if(printTimer.hasElapsed(.5)){
+                //     printTimer.reset();
+                //     System.out.println("Limelight updatedPose");
+                // }
+            }
+        } else if(printTimer.hasElapsed(1)){
             printTimer.reset();
-            System.out.println("Limelight updatedPose");
-    
-        }
-      
-      }
-    } else if(printTimer.hasElapsed(1)){
-        printTimer.reset();
-        System.out.println("Limelight not updatingPose");
+            System.out.println("Limelight not updatingPose");
 
+        }
     }
-        
-    }
-    
 }

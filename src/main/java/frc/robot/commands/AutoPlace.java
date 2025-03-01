@@ -74,7 +74,8 @@ public class AutoPlace extends SequentialCommandGroup {
         String pathName = "";
         // Name format is [side symbol][1/2] (e.g. A1, A2, B1, B2)
         pathName += node.hexSide.name;
-        pathName += node.side.name;
+        // If lvl 1, append "lvl1" to the path name. Otherwise, append the side name
+        pathName += String.valueOf(node.level).equals("1") ? "lvl1" : node.side.name;
 
         try {
             path = PathPlannerPath.fromPathFile(suppliedPathName.isEmpty() ? pathName : suppliedPathName);
@@ -86,13 +87,13 @@ public class AutoPlace extends SequentialCommandGroup {
         // Command to move the robot to the desired position along a path, running until path is complete
         Command move = new ParallelDeadlineGroup(
 
-            // On the fly pathfinding to station, or follow the path if supplied
+            // On the fly pathfinding to the reef, or follow the path if supplied
             new ConditionalCommand(
                 AutoBuilder.pathfindThenFollowPath(path, constraints),
                 AutoBuilder.followPath(path),
                 () -> suppliedPathName.isEmpty()
             ),
-            // Move the superstructure into a safe position for moving
+            // Start moving the elevator to the correct position
             new ConditionalCommand(
                 elevatorToLevel(node.level, elevator),
                 elevatorToLevel(0, elevator),
@@ -102,12 +103,11 @@ public class AutoPlace extends SequentialCommandGroup {
 
         // Command to move elevator to the desired position and score the coral
         SequentialCommandGroup place = new SequentialCommandGroup(
-            // Move elevator until at desired position, with a timeout
+            // Move elevator with a timeout
             elevatorToLevel(node.level, elevator)
-                .until(new ElevatorToPosCommand(ElevatorSubsystem.level1Position, elevator)::isFinished)
                 .withTimeout(1),
-            // Wait some time if going to L3/L4
-            new WaitCommand((node.level == 3) || (node.level == 4) ? 1 : 0),
+            // Wait time dependent on level
+            new WaitCommand((node.level == 3) || (node.level == 4) ? 1 : 0.5),
             
             // Score Coral
             new ParallelDeadlineGroup(

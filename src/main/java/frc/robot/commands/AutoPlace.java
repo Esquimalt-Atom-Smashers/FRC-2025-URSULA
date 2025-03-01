@@ -17,6 +17,8 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.swerveDrive.CommandSwerveDrivetrain;
+import frc.robot.subsystems.coraldoor.CoralDoorSubsystem;
+import frc.robot.subsystems.coraldoor.CoralDoorToPositionCommand;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.elevator.ElevatorToPosCommand;
 
@@ -65,11 +67,11 @@ public class AutoPlace extends SequentialCommandGroup {
             3.0, 4.0,
             Units.degreesToRadians(270), Units.degreesToRadians(360));
 
-    public AutoPlace(CommandSwerveDrivetrain drivetrain, ElevatorSubsystem elevator, Node node) {
-        this(drivetrain, elevator, node, "");
+    public AutoPlace(CommandSwerveDrivetrain drivetrain, ElevatorSubsystem elevatorSubsystem, CoralDoorSubsystem coralDoorSubsystem, Node node) {
+        this(drivetrain, elevatorSubsystem, coralDoorSubsystem, node, "");
     }
 
-    public AutoPlace(CommandSwerveDrivetrain drivetrain, ElevatorSubsystem elevator, Node node, String suppliedPathName) {
+    public AutoPlace(CommandSwerveDrivetrain drivetrain, ElevatorSubsystem elevatorSubsystem, CoralDoorSubsystem coralDoorSubsystem, Node node, String suppliedPathName) {
         PathPlannerPath path;
         String pathName = "";
         // Name format is [side symbol][1/2] (e.g. A1, A2, B1, B2)
@@ -95,24 +97,28 @@ public class AutoPlace extends SequentialCommandGroup {
             ),
             // Start moving the elevator to the correct position
             new ConditionalCommand(
-                elevatorToLevel(node.level, elevator),
-                elevatorToLevel(0, elevator),
-                () -> node.level != 0
+                elevatorToLevel(node.level, elevatorSubsystem),
+                new CoralDoorToPositionCommand(CoralDoorSubsystem.DoorPosition.OPEN, coralDoorSubsystem),
+                () -> node.level != 1
             )
         );
 
         // Command to move elevator to the desired position and score the coral
         SequentialCommandGroup place = new SequentialCommandGroup(
             // Move elevator with a timeout
-            elevatorToLevel(node.level, elevator)
-                .withTimeout(1),
+            elevatorToLevel(node.level, elevatorSubsystem)
+            .withTimeout(1),
             // Wait time dependent on level
             new WaitCommand((node.level == 3) || (node.level == 4) ? 1 : 0.5),
             
             // Score Coral
-            new ParallelDeadlineGroup(
-                // Add command to drive right
-                new InstantCommand(() -> drivetrain.setControl(new SwerveRequest.RobotCentric().withVelocityX(-0.5))).repeatedly().withTimeout(1)
+            new ConditionalCommand(
+                new ParallelDeadlineGroup(
+                    // Add command to drive right
+                    new InstantCommand(() -> drivetrain.setControl(new SwerveRequest.RobotCentric().withVelocityX(-0.5))).repeatedly().withTimeout(1)
+                ),
+                new InstantCommand(() -> new CoralDoorToPositionCommand(CoralDoorSubsystem.DoorPosition.OPEN, coralDoorSubsystem)),
+                () -> node.level != 1
             )
         );
 
@@ -121,7 +127,9 @@ public class AutoPlace extends SequentialCommandGroup {
             addCommands(new ParallelDeadlineGroup(move));
             addCommands(place);
 
-            // @TODO Add commands for what to do after coral has been placed
+            // Lower elevator and close coral door
+            elevatorToLevel(0, elevatorSubsystem);
+            new CoralDoorToPositionCommand(CoralDoorSubsystem.DoorPosition.CLOSED, coralDoorSubsystem);
 
         } else {
             // Simplified place in simulation
@@ -145,21 +153,21 @@ public class AutoPlace extends SequentialCommandGroup {
         }
     }
 
-    public Command elevatorToLevel(int level, ElevatorSubsystem elevator) {
+    public Command elevatorToLevel(int level, ElevatorSubsystem elevatorSubsystem) {
         if (level == 1) {
-            return new ElevatorToPosCommand(ElevatorSubsystem.level1Position, elevator);
+            return new ElevatorToPosCommand(ElevatorSubsystem.level1Position, elevatorSubsystem);
         }
         else if (level == 2) {
-            return new ElevatorToPosCommand(ElevatorSubsystem.level2Position, elevator);
+            return new ElevatorToPosCommand(ElevatorSubsystem.level2Position, elevatorSubsystem);
         }
         else if (level == 3) {
-            return new ElevatorToPosCommand(ElevatorSubsystem.level3Position, elevator);
+            return new ElevatorToPosCommand(ElevatorSubsystem.level3Position, elevatorSubsystem);
         }
         else if (level == 4) {
-            return new ElevatorToPosCommand(ElevatorSubsystem.level4Position, elevator);
+            return new ElevatorToPosCommand(ElevatorSubsystem.level4Position, elevatorSubsystem);
         }
         else {
-            return new ElevatorToPosCommand(ElevatorSubsystem.lowPosition, elevator);
+            return new ElevatorToPosCommand(ElevatorSubsystem.lowPosition, elevatorSubsystem);
         }
     }
 }

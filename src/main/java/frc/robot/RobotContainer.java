@@ -190,9 +190,9 @@ public class RobotContainer {
         }));
 
         // Autoplace command (Allow operator to also place)
-        driverController.back().whileTrue(new AutoPlace(drivetrain, elevatorSubsystem, 
+        driverController.back().whileTrue(new AutoPlace(drivetrain, elevatorSubsystem, coralDoorSubsystem,
                                                                 new Node(level, hexSide, side)));
-        operatorController.rightBumper().whileTrue(new AutoPlace(drivetrain, elevatorSubsystem, 
+        operatorController.rightBumper().whileTrue(new AutoPlace(drivetrain, elevatorSubsystem, coralDoorSubsystem,
                                                                 new Node(level, hexSide, side)));
 
         // Auto pickup command

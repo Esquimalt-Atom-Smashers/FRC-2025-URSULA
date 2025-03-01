@@ -157,7 +157,7 @@
 //     digitalWrite(previousCoral-2, LOW);
 //     previousCoral = currentCoral;
 //     Joystick.setButton(currentCoral, PRESSED);
-//     if (currentCoral == 0) {
+//     if (currentCoral == 1) {
 //       digitalWrite(11, HIGH);
 //     } else {
 //       digitalWrite(11, LOW);

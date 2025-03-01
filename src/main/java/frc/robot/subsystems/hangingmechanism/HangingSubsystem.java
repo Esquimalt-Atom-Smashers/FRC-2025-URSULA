@@ -41,7 +41,7 @@ public class HangingSubsystem extends SubsystemBase{
 
     public enum WinchPosition {
         RETRACTED(0),
-        EXTENDED(700);
+        EXTENDED(690);
 
         double value;
 
@@ -92,7 +92,7 @@ public class HangingSubsystem extends SubsystemBase{
     public SequentialCommandGroup extendHangingMechanismCommand() {
         return new SequentialCommandGroup(
             servoReleaseCommand(),
-            new WinchToPositionCommand(this, -4),
+            new WinchToPositionCommand(this, -18),
             new WinchToPositionCommand(this, WinchPosition.EXTENDED)
         );
     }
@@ -105,7 +105,10 @@ public class HangingSubsystem extends SubsystemBase{
     }
 
     public Command manualRetractCommand() {
-        return Commands.runOnce(() -> winchController.setReference(-4, ControlType.kVoltage));    
+        return Commands.runOnce(() -> {
+            winchController.setReference(-5, ControlType.kVoltage);
+            setReleaseServoPosition(ReleaseServoPosition.LATCHED);
+        });    
     }
 
     public Command stopandZeroMotorCommand() {

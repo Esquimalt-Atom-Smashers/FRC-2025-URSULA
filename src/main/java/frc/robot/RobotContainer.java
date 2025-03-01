@@ -24,6 +24,8 @@ import frc.robot.commands.AutoPlace;
 import frc.robot.commands.AutoPlace.Node;
 import frc.robot.subsystems.algaeGround.AlgaeGroundSubsystem;
 import frc.robot.subsystems.algaeGround.AlgaeToPosCommand;
+import frc.robot.subsystems.coraldoor.CoralDoorSubsystem;
+import frc.robot.subsystems.coraldoor.CoralDoorToPositionCommand;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.elevator.ElevatorToPosCommand;
 import frc.robot.subsystems.limelight.LimelightSubsystem;
@@ -59,14 +61,16 @@ public class RobotContainer {
     public LimelightSubsystem limelightSubsystem; 
     public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
     public final AlgaeGroundSubsystem algaeGroundSubsystem = new AlgaeGroundSubsystem();
+    public final HangingSubsystem hangingSubsystem = new HangingSubsystem();
+    public final CoralDoorSubsystem coralDoorSubsystem = new CoralDoorSubsystem();
 
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
 
     public RobotContainer() {
-        //register the named commands for auto
+        // Register the named commands for auto
         registerCommands();
-        autoChooser = AutoBuilder.buildAutoChooser("Tests");
+        autoChooser = AutoBuilder.buildAutoChooser("ScoreL1FromCenter");
         SmartDashboard.putData("Auto Mode", autoChooser);
         limelightSubsystem = new LimelightSubsystem(drivetrain, true);
 
@@ -74,6 +78,7 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
+        //// ----------------- Driving Commands -----------------
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
         drivetrain.setDefaultCommand(
@@ -84,51 +89,42 @@ public class RobotContainer {
                     .withRotationalRate(MathUtil.applyDeadband(-xboxController.getRightX(),XBOX_DEADBAND) * MaxAngularRate*(xboxController.getRightTriggerAxis()*2+1)) // Drive counterclockwise with negative X (left)
             )
         );
-        // xboxController.a().whileTrue(drivetrain.applyRequest(() -> brake));
-        // xboxController.b().whileTrue(drivetrain.applyRequest(() ->
-        //     point.withModuleDirection(new Rotation2d(-xboxController.getLeftY(), -xboxController.getLeftX()))
-        // // ));
-         // xboxController.pov(0).whileTrue(drivetrain.applyRequest(() ->
-        //     forwardStraight.withVelocityX(0.5).withVelocityY(0))
-        // );
-        // xboxController.pov(180).whileTrue(drivetrain.applyRequest(() ->
-        //     forwardStraight.withVelocityX(-0.5).withVelocityY(0))
-        // );
+        // Reset the field-centric heading on left bumper press
+        xboxController.start().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-        // // Run SysId routines when holding back/start and X/Y.
-        // // Note that each routine should be run exactly once in a single log.
-        // xboxController.back().and(xboxController.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        // xboxController.back().and(xboxController.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-        // xboxController.start().and(xboxController.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-        // xboxController.start().and(xboxController.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
-        // reset the field-centric heading on left bumper press
-        //xboxController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+        //// ----------------- Elevator Commands ----------------
+        xboxController.a().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.lowPosition, elevatorSubsystem));
+        xboxController.b().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.level2Position, elevatorSubsystem));
+        xboxController.x().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.level3Position, elevatorSubsystem));
+        xboxController.y().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.level4Position, elevatorSubsystem));
 
-        // Algae Ground Testing Controls
+
+        //// --------------- Coral Door Commands ----------------
+        xboxController.leftTrigger(0.5).onTrue(new CoralDoorToPositionCommand(CoralDoorSubsystem.DoorPosition.OPEN, coralDoorSubsystem))
+            .onFalse(new CoralDoorToPositionCommand(CoralDoorSubsystem.DoorPosition.CLOSED, coralDoorSubsystem));
+
+
+        //// ----------------- Hanging Commands -----------------
+        xboxController.povUp().onTrue(hangingSubsystem.manualRetractCommand())
+            .onFalse(hangingSubsystem.stopandZeroMotorCommand());
+        xboxController.povLeft().onTrue(hangingSubsystem.retractHangingMechanismCommand());
+        xboxController.povRight().onTrue(hangingSubsystem.extendHangingMechanismCommand());
+
+
+        //// ------------------ Algae Commands ------------------
         xboxController.rightBumper().onFalse(algaeGroundSubsystem.stopIntakeSequenceCommand())
             .onTrue(algaeGroundSubsystem.intakeSequenceCommand());
         //xboxController.a().onTrue(algaeGroundSubsystem.intakeUntilStalledCommand())
             //.onFalse(algaeGroundSubsystem.holdCommand());
         xboxController.leftBumper().onTrue(algaeGroundSubsystem.outtakeCommand())
             .onFalse(algaeGroundSubsystem.holdCommand());
-        xboxController.pov(180).onTrue(new AlgaeToPosCommand(AlgaeGroundSubsystem.PROCESSOR_POSIITON, algaeGroundSubsystem))
-            .onFalse(new AlgaeToPosCommand(AlgaeGroundSubsystem.DRIVE_POSITION, algaeGroundSubsystem));
+        xboxController.povDown().onTrue(new AlgaeToPosCommand(algaeGroundSubsystem.PROCESSOR_POSIITON, algaeGroundSubsystem))
+            .onFalse(new AlgaeToPosCommand(algaeGroundSubsystem.DRIVE_POSITION, algaeGroundSubsystem));
+
         
-
-
-        //Elevator Testing Controls
-         xboxController.a().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.lowPosition, elevatorSubsystem));
-         xboxController.b().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.level2Position, elevatorSubsystem));
-         xboxController.x().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.level3Position, elevatorSubsystem));
-         xboxController.y().onTrue(new ElevatorToPosCommand(ElevatorSubsystem.level4Position, elevatorSubsystem));
-
-       
-
-        //drivetrain.registerTelemetry(logger::telemeterize);
-
-        // ----- Automated Scoring -----
-        // Custom Controller Testing
+        //// ---------------- Automated Commands ----------------
+        // Choosing where to score on Custom Controller
         CustomController.bt1().onTrue(new RunCommand(() -> {
             hexSide = AutoPlace.HexSide.A;
             side = AutoPlace.Side.one;
@@ -190,8 +186,32 @@ public class RobotContainer {
             level = 4;
         }));
 
+        // Autoplace command
         xboxController.leftBumper().whileTrue(new AutoPlace(drivetrain, elevatorSubsystem, 
                                                                 new Node(level, hexSide, side)));
+
+
+        // Commented out Bindings
+        // hangingSubsystem.setDefaultCommand(new RunCommand(() -> 
+        //     hangingSubsystem.setWinchPosition(hangingSubsystem.getWinchPosition() + xboxController.getRightY())
+        // ));
+        // xboxController.a().whileTrue(drivetrain.applyRequest(() -> brake));
+        // xboxController.b().whileTrue(drivetrain.applyRequest(() ->
+        //     point.withModuleDirection(new Rotation2d(-xboxController.getLeftY(), -xboxController.getLeftX()))
+        // // ));
+         // xboxController.pov(0).whileTrue(drivetrain.applyRequest(() ->
+        //     forwardStraight.withVelocityX(0.5).withVelocityY(0))
+        // );
+        // xboxController.pov(180).whileTrue(drivetrain.applyRequest(() ->
+        //     forwardStraight.withVelocityX(-0.5).withVelocityY(0))
+        // );
+        // // Run SysId routines when holding back/start and X/Y.
+        // // Note that each routine should be run exactly once in a single log.
+        // xboxController.back().and(xboxController.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+        // xboxController.back().and(xboxController.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+        // xboxController.start().and(xboxController.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+        // xboxController.start().and(xboxController.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+        //drivetrain.registerTelemetry(logger::telemeterize);
     }
 
     public Command getAutonomousCommand() {
@@ -199,7 +219,7 @@ public class RobotContainer {
         return autoChooser.getSelected();
     }
     private void registerCommands(){
-        //register the commands here
+        // Register the commands here
         NamedCommands.registerCommand("ElevatorHomingCommand", new ElevatorHomingCommand(elevatorSubsystem));
         NamedCommands.registerCommand("AlgaeToDrivePos", new AlgaeToPosCommand(AlgaeGroundSubsystem.DRIVE_POSITION, algaeGroundSubsystem));
         NamedCommands.registerCommand("AlgaeToIntakePos", new AlgaeToPosCommand(AlgaeGroundSubsystem.INTAKE_POSITION, algaeGroundSubsystem));
@@ -207,6 +227,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("ElevatorToLVL2", new ElevatorToPosCommand(ElevatorSubsystem.level2Position, elevatorSubsystem));
         NamedCommands.registerCommand("ElevatorToLVL3", new ElevatorToPosCommand(ElevatorSubsystem.level3Position, elevatorSubsystem));
         NamedCommands.registerCommand("ElevatorToLVL4", new ElevatorToPosCommand(ElevatorSubsystem.level4Position, elevatorSubsystem));
-
+        NamedCommands.registerCommand("OpenCoralDoor", new CoralDoorToPositionCommand(CoralDoorSubsystem.DoorPosition.OPEN, coralDoorSubsystem));
+        NamedCommands.registerCommand("CloseCoralDoor", new CoralDoorToPositionCommand(CoralDoorSubsystem.DoorPosition.CLOSED, coralDoorSubsystem));
     }
 }

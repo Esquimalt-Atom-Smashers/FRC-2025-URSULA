@@ -30,7 +30,6 @@ import frc.robot.subsystems.coraldoor.CoralDoorToPositionCommand;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.elevator.ElevatorToPosCommand;
 import frc.robot.subsystems.hangingmechanism.HangingSubsystem;
-import frc.robot.subsystems.limelight.LimelightSubsystem;
 import frc.robot.subsystems.swerveDrive.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerveDrive.TunerConstants;
 import scoringcontroller.CommandCustomController;
@@ -61,7 +60,6 @@ public class RobotContainer {
 
     //Create Subsystems
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-    public LimelightSubsystem limelightSubsystem; 
     public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
     public final AlgaeGroundSubsystem algaeGroundSubsystem = new AlgaeGroundSubsystem();
     public final HangingSubsystem hangingSubsystem = new HangingSubsystem();
@@ -75,7 +73,6 @@ public class RobotContainer {
         registerCommands();
         autoChooser = AutoBuilder.buildAutoChooser("ScoreL1FromCenter");
         SmartDashboard.putData("Auto Mode", autoChooser);
-        limelightSubsystem = new LimelightSubsystem(drivetrain, true);
 
         configureBindings();
     }

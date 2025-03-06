@@ -284,6 +284,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
             LimelightHelpers.SetRobotOrientation("limelight", headingDeg, 0, 0, 0, 0, 0);
             LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+            LimelightHelpers.PoseEstimate mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
             if (mt2 != null && mt2.tagCount > 0 && angularVelocity <= 720) {
                 setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7, 9999999));
                 addVisionMeasurement(
@@ -291,6 +292,16 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                     Utils.fpgaToCurrentTime(mt2.timestampSeconds));
 
                 System.out.println("Limelight updatedPose");
+                var updatedPose = getState().Pose;
+                System.out.println("Updated Robot Position: " + updatedPose);
+            }
+            if (mt1 != null && mt1.tagCount > 0 && angularVelocity <= 720 && mt1.avgTagDist <.8) {
+                setVisionMeasurementStdDevs(VecBuilder.fill(5,5, 5));
+                addVisionMeasurement(
+                    mt1.pose,
+                    Utils.fpgaToCurrentTime(mt1.timestampSeconds));
+
+                System.out.println("Limelight updatedPose heading");
                 var updatedPose = getState().Pose;
                 System.out.println("Updated Robot Position: " + updatedPose);
             }
